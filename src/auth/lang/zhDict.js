@@ -13,6 +13,7 @@ export const zhDict = {
   Confirming: '正在確認',
   'Create a new account': '建立新帳戶',
   'Create Account': '建立帳戶',
+  'Invalid verification code provided, please try again.': '驗證碼不正確，請再試一次',
   'Sign In': '登入',
   'Creating Account': '正在建立帳戶',
   'Dismiss alert': '關閉警示',

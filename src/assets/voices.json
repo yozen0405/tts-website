@@ -10,7 +10,11 @@
         },
         {
           "name": "zh-TW-HsiaoChenNeural",
-          "gender": "女"
+          "gender": "女一"
+        },
+        {
+          "name": "zh-TW-HsiaoYuNeural",
+          "gender": "女二"
         }
       ]
     },
@@ -20,7 +24,19 @@
       "voices": [
         {
           "name": "zh-CN-YunxiNeural",
-          "gender": "男"
+          "gender": "男一"
+        },
+        {
+          "name": "zh-CN-YunyeNeural",
+          "gender": "男二"
+        },
+        {
+          "name": "zh-CN-XiaoxiaoMultilingualNeural",
+          "gender": "女一"
+        },
+        {
+          "name": "zh-CN-XiaochenMultilingualNeural",
+          "gender": "女二"
         }
       ]
     },
