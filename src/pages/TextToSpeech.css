@@ -1,0 +1,121 @@
+/* Center the entire component */
+.text-to-speech-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    width: 80vw;
+    margin: 5vw auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+/* Title styling */
+.text-to-speech-container h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Styling the textarea */
+.text-to-speech-textarea {
+    width: 100%;
+    height: 40vh;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    margin-bottom: 40px;
+    font-family: inherit;
+}
+
+/* Button styling */
+.text-to-speech-button {
+    padding: 10px 20px;
+    height: 3rem;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.text-to-speech-button:hover {
+    background-color: #0056b3;
+}
+
+.text-to-speech-btn-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-around;
+    gap: 1rem;
+}
+
+.text-to-speech-voice-section {
+    display: flex;
+    gap: 1rem;
+}
+
+.text-to-speech-voice-section .dropdown {
+    flex-grow: 1;
+}
+
+/* Audio player styling */
+.text-to-speech-audio-area {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.save-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+    background-color: #218838;
+}
+
+.textarea-container {
+    position: relative;
+    width: 100%;
+}
+
+.char-counter {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .text-to-speech-container {
+        width: 100vw;
+        border-color: transparent;
+    }
+
+    .text-to-speech-voice-section {
+        flex-direction: column;
+        gap: .5rem;
+    }
+
+    .text-to-speech-voice-section .dropdown {
+        width: 100%;
+    }
+}

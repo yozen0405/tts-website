@@ -1,0 +1,10 @@
+type AudioHistory
+  @model
+  @auth(rules: [{ allow: owner, ownerField: "userId", provider: userPools }]) {
+  id: ID!
+  userId: String!
+  text: String!
+  audioUrl: String!
+  audioPath: String!
+  createdAt: AWSDateTime
+}

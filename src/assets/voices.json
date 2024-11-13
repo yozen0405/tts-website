@@ -1,0 +1,42 @@
+{
+  "languages": [
+    {
+      "language": "台灣",
+      "languageCode": "zh-TW",
+      "voices": [
+        {
+          "name": "zh-TW-YunJheNeural",
+          "gender": "男"
+        },
+        {
+          "name": "zh-TW-HsiaoChenNeural",
+          "gender": "女"
+        }
+      ]
+    },
+    {
+      "language": "中國大陸",
+      "languageCode": "zh-CN",
+      "voices": [
+        {
+          "name": "zh-CN-YunxiNeural",
+          "gender": "男"
+        }
+      ]
+    },
+    {
+      "language": "美國",
+      "languageCode": "en-US",
+      "voices": [
+        {
+          "name": "en-US-EmmaMultilingualNeural",
+          "gender": "女"
+        },
+        {
+          "name": "en-US-BrianMultilingualNeural",
+          "gender": "男"
+        }
+      ]
+    }
+  ]
+}

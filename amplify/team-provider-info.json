@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tts-dev-9f738-authRole",
+      "UnauthRoleArn": "arn:aws:iam::605134459632:role/amplify-tts-dev-9f738-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::605134459632:role/amplify-tts-dev-9f738-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-tts-dev-9f738-deployment",
+      "UnauthRoleName": "amplify-tts-dev-9f738-unauthRole",
+      "StackName": "amplify-tts-dev-9f738",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:605134459632:stack/amplify-tts-dev-9f738/cc21d830-a02c-11ef-81bd-0631e24394d1",
+      "AmplifyAppId": "d4fdpf0b4bn59"
+    },
+    "categories": {
+      "auth": {
+        "tts3c1965c7": {}
+      },
+      "storage": {
+        "s35377b734": {}
+      },
+      "api": {
+        "tts": {}
+      }
+    }
+  }
+}

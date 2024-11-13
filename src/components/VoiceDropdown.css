@@ -1,0 +1,49 @@
+/* VoiceDropdown.css */
+.dropdown {
+  position: relative;
+  width: 12rem;
+}
+
+.dropdown-header {
+  background-color: #fff; /* White background for header */
+  color: #333; /* Dark text for visibility */
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5); /* Soft shadow */
+  border-radius: 4px; /* Rounded corners */
+  font-weight: 600;
+}
+
+.dropdown-arrow {
+  transition: transform 0.2s ease;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-list {
+  position: absolute;
+  background-color: #fff; /* White background for dropdown items */
+  color: #333; /* Dark text for readability */
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Darker shadow for dropdown */
+  z-index: 1;
+  border-radius: 4px; /* Rounded corners to match header */
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0; /* Light gray on hover for contrast */
+}
