@@ -108,6 +108,8 @@
     .text-to-speech-container {
         width: 100vw;
         border-color: transparent;
+        background-color: transparent;
+        box-shadow: none;
     }
 
     .text-to-speech-voice-section {

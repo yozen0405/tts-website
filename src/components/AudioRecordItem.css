@@ -1,0 +1,30 @@
+
+.audio-record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: .1rem solid #34874c;
+    border-left: 1rem solid #34874c;
+  }
+  
+  .audio-record-title {
+    font-size: 1.1rem;
+  }
+  
+  .audio-record-actions {
+    display: flex;
+    gap: 2vw;
+  }
+  .audio-record-actions button {
+    font-size: 2rem;
+    color: #34874c;
+    background-color: transparent;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }

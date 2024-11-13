@@ -55,6 +55,8 @@ export const zhDict = {
   'Your code is on the way. To log in, enter the code we texted to': '您的驗證碼正在傳送中。請輸入我們發送給您的簡訊驗證碼以登入：',
 
   // Additional translations
+  'Code': '驗證碼',
+  'Code *': '驗證碼 *',
   'Confirm a Code': '確認碼',
   'Confirm Sign In': '確認登入',
   'Forgot Password': '忘記密碼',

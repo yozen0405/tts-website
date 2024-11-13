@@ -1,4 +1,3 @@
-// pages/TextToSpeech.js
 import { useState, useEffect } from 'react';
 import './TextToSpeech.css';
 import { getCurrentUser } from 'aws-amplify/auth';
@@ -7,15 +6,20 @@ import { getAudioUrl, uploadAudio } from '../api/audioStorage';
 import { getAudioByUid, removeOldestAudio, saveNewAudio } from '../api/dbService';
 import VoiceDropdown from '../components/VoiceDropdown';
 import Loader from '../components/Loader';
+import StickyAudioPlayer from '../components/StickyAudioPlayer'; 
+import AudioRecordItem from '../components/AudioRecordItem'; 
 import voicesData from '../assets/voices.json';
 
 export default function TextToSpeech() {
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [audioRecord, setAudioRecord] = useState(null);
+  const [currentRecord, setCurrentRecord] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentAudioOnChange, setcurrentAudioOnChange] = useState(false); 
 
   const MAX_CHAR_LIMIT = 5000;
 
@@ -55,7 +59,8 @@ export default function TextToSpeech() {
       if (audioRecords.length >= MAX_AUDIO_RECORDS) {
         await removeOldestAudio(audioRecords);
       }
-      await saveNewAudio(userId, text, url, path);
+      const record = await saveNewAudio(userId, text, url, path);
+      setAudioRecord(record);
     } catch (error) {
       console.error('Error managing audio history:', error);
     }
@@ -74,6 +79,11 @@ export default function TextToSpeech() {
     const newText = e.target.value;
     setText(newText);
     setCharCount(newText.length);
+  };
+
+  const handlePlay = (record) => {
+    setCurrentRecord(record);
+    setcurrentAudioOnChange(!currentAudioOnChange);
   };
 
   return (
@@ -122,12 +132,14 @@ export default function TextToSpeech() {
       {audioUrl && (
         <div className="text-to-speech-audio-area">
           <h3>播放生成的語音</h3>
-          <audio className="text-to-speech-audio" controls>
-            <source src={audioUrl} type="audio/mpeg" />
-            您的瀏覽器不支援音頻元素。
-          </audio>
+          <AudioRecordItem
+            record={{...audioRecord, url: audioUrl, shortText: text }}
+            onPlay={handlePlay}
+          />
         </div>
       )}
+
+      {currentRecord && <StickyAudioPlayer audioUrl={currentRecord.audioUrl} initialRecord={currentRecord} onChange={currentAudioOnChange} />}
     </div>
   );
 }

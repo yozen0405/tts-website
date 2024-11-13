@@ -48,7 +48,7 @@ export async function removeOldestAudio(audioRecords) {
 }
 
 export async function saveNewAudio(userId, text, url, path) {
-    await client.graphql({
+    const response = await client.graphql({
         query: createAudioHistory,
         variables: {
             input: {
@@ -59,11 +59,13 @@ export async function saveNewAudio(userId, text, url, path) {
             },
         },
     });
+    const record = response.data.createAudioHistory;
+    return record;
 }
 
 export async function updateAudioUrl(record) {
     const isExpired = (updatedTime) => {
-        const expirationTime = 15 * 60 * 1000; // e.g., 1-hour expiration in ms
+        const expirationTime = 15 * 60 * 1000;
         const updatedDate = new Date(updatedTime);
         return new Date() - updatedDate > expirationTime;
     };
@@ -84,4 +86,29 @@ export async function updateAudioUrl(record) {
         });
     }
     return url;
+}
+
+export async function updateAudioRecord(record) {
+    const isExpired = (updatedTime) => {
+        const expirationTime = 15 * 60 * 1000; // 15 minutes
+        const updatedDate = new Date(updatedTime);
+        return new Date() - updatedDate > expirationTime;
+    };
+
+    if (isExpired(record.updatedAt)) {
+        console.log("update expired", record);
+        const newUrl = await getAudioUrl(record.audioPath);
+        const response = await client.graphql({
+            query: updateAudioHistory,
+            variables: {
+                input: {
+                    id: record.id,
+                    audioUrl: newUrl,
+                },
+            },
+        });
+        // Update local record with new URL and updated timestamp
+        return response.data.updateAudioHistory;
+    }
+    return record; // Return the original record if no update is needed
 }
