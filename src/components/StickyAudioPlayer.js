@@ -10,7 +10,6 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
     const [trackProgress, setTrackProgress] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
-    const CntDebugger = useRef(0);
 
     const audioRef = useRef(null);
     const intervalRef = useRef(null);
@@ -88,10 +87,6 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
 
     useEffect(() => {
         const changeSong = async () => {
-            CntDebugger.current++;
-            if (CntDebugger.current <= 1) {
-                return;
-            }
             setIsLoading(true);
             setIsPlaying(true);
             // console.log("cnt: ", CntDebugger.current);
