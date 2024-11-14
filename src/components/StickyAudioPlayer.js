@@ -20,17 +20,20 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
         return record.audioUrl;
     };
 
-    const onScrub = (value) => {
+    const onScrub = (value) => {    
+        console.log("on srub");
         const scaledValue = value / SCALE_FACTOR;
         clearInterval(intervalRef.current);
-        setIsPlaying(false);
         audioRef.current.currentTime = scaledValue;
         setTrackProgress(audioRef.current.currentTime * SCALE_FACTOR);
         currentTime.current = audioRef.current.currentTime * SCALE_FACTOR;
     };
 
     const onScrubEnd = () => {
-        setIsPlaying(true);
+        console.log("srub end");
+        if (!isPlaying) {
+            setIsPlaying(true);
+        }
         startTimer();
     };
 
@@ -109,11 +112,11 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
                 if (onLoaded) {
                     onLoaded();
                 }
+                if (isPlaying) {
+                    audioRef.current.play();
+                    startTimer();
+                }
             };
-            if (isPlaying) {
-                audioRef.current.play();
-                startTimer();
-            }
         };
     
         changeSong(); 
@@ -139,6 +142,7 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
                 className="progress"
                 onKeyUp={onScrubEnd}
                 onMouseUp={onScrubEnd}
+                onTouchEnd={onScrubEnd}
                 onChange={(e) => onScrub(e.target.value)}
                 style={{ background: trackStyling }}
             />

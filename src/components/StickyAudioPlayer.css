@@ -6,8 +6,9 @@
     background: #333;
     color: white;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem 2rem;
     z-index: 10;
     flex-wrap: wrap;
 }
@@ -19,8 +20,7 @@
 
 .play-pause-button {
     color: white;
-    font-size: 1.5rem;
-    margin-right: 1rem;
+    font-size: 2rem;
     background: none;
     border: none;
     cursor: pointer;
@@ -53,7 +53,8 @@
 }
 
 .time-display {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+    font-weight: 600;
     min-width: 70px;
     text-align: right;
 }
@@ -64,5 +65,6 @@ input[type="range"] {
     border-radius: 8px;
     background: #888;
     cursor: pointer;
-    flex: 1;
+    width: 100%;
+    margin-bottom: 1rem;
 }
