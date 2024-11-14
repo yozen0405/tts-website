@@ -1,4 +1,3 @@
-// pages/History.js
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from 'aws-amplify/auth';
 import './History.css';
@@ -11,7 +10,8 @@ export default function History() {
     const [audioRecords, setAudioRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentRecordId, setCurrentRecordId] = useState(null);
-    const [currentAudioOnChange, setcurrentAudioOnChange] = useState(false); 
+    const [currentAudioOnChange, setcurrentAudioOnChange] = useState(false);
+    const [loadingRecordId, setLoadingRecordId] = useState(null); // Track which record is loading
 
     useEffect(() => {
         const fetchAudioHistory = async () => {
@@ -35,7 +35,12 @@ export default function History() {
 
     const handlePlay = (id) => {
         setCurrentRecordId(id);
+        setLoadingRecordId(id); 
         setcurrentAudioOnChange(!currentAudioOnChange);
+    };
+
+    const handleAudioLoaded = () => {
+        setLoadingRecordId(null); 
     };
 
     return (
@@ -49,12 +54,19 @@ export default function History() {
                         key={record.id}
                         recordId={record.id}
                         onPlay={handlePlay}
+                        isAudioLoading={loadingRecordId === record.id} 
                     />
                 ))
             ) : (
                 <p>目前沒有任何歷史紀錄</p>
             )}
-            {currentRecordId && <StickyAudioPlayer recordId={currentRecordId} onChange={currentAudioOnChange} />}
+            {currentRecordId && (
+                <StickyAudioPlayer
+                    recordId={currentRecordId}
+                    onChange={currentAudioOnChange}
+                    onLoaded={handleAudioLoaded} 
+                />
+            )}
         </div>
     );
 }

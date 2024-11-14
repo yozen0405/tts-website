@@ -3,14 +3,18 @@ import './StickyAudioPlayer.css';
 import AudioControls from './AudioControls'
 import { getAudioById } from '../api/dbService';
 
-export default function StickyAudioPlayer({ recordId, onChange = false }) {
+export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
+    const SCALE_FACTOR = 10000;
+
     const [isPlaying, setIsPlaying] = useState(true);
     const [trackProgress, setTrackProgress] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const CntDebugger = useRef(0);
 
     const audioRef = useRef(null);
     const intervalRef = useRef(null);
+    const currentTime = useRef(0);
 
     const getAudioUrl = async () => {
         const record = await getAudioById(recordId);
@@ -18,17 +22,17 @@ export default function StickyAudioPlayer({ recordId, onChange = false }) {
     };
 
     const onScrub = (value) => {
-        // Clear any timers already running
+        const scaledValue = value / SCALE_FACTOR;
         clearInterval(intervalRef.current);
-        audioRef.current.currentTime = value;
-        setTrackProgress(audioRef.current.currentTime);
+        setIsPlaying(false);
+        audioRef.current.currentTime = scaledValue;
+        setTrackProgress(audioRef.current.currentTime * SCALE_FACTOR);
+        currentTime.current = audioRef.current.currentTime * SCALE_FACTOR;
     };
 
     const onScrubEnd = () => {
-        // If not already playing, start
-        if (isPlaying) {
-            startTimer();
-        }
+        setIsPlaying(true);
+        startTimer();
     };
 
     const formatTime = (time) => {
@@ -46,30 +50,34 @@ export default function StickyAudioPlayer({ recordId, onChange = false }) {
                 setIsPlaying(false);
                 clearInterval(intervalRef.current);
             } else {
-                console.log("current time:", audioRef.current.currentTime, duration);
-                setTrackProgress(audioRef.current.currentTime);
+                const updatedTime = audioRef.current.currentTime * SCALE_FACTOR;
+                if (currentTime.current <= updatedTime) {
+                    setTrackProgress(updatedTime);
+                    currentTime.current = audioRef.current.currentTime * SCALE_FACTOR;
+                    // console.log("currentTime:", currentTime.current);   
+                    // console.log("current time: ", intervalRef.current, audioRef.current.currentTime, updatedTime);
+                }
             }
-        }, [100]);
+        }, 10);
     };
 
     useEffect(() => {
-        // console.log("isPlaying:", isPlaying, "isLoading:", isLoading);
         if (isPlaying && !isLoading) {
             if (audioRef.current.ended) {
                 setTrackProgress(0);
+                currentTime.current = 0;
             }
             audioRef.current.play();
             startTimer();
         } else if (!isLoading) {
-        audioRef.current.pause();
+            audioRef.current.pause();
+            clearInterval(intervalRef.current);
         }
     }, [isPlaying, isLoading]);
 
     useEffect(() => {
-        // Pause and clean up on unmount
         return () => {
             if (audioRef.current) {
-                console.log("pause on unmount");
                 audioRef.current.pause();
             }
             if (intervalRef.current) {
@@ -78,12 +86,16 @@ export default function StickyAudioPlayer({ recordId, onChange = false }) {
         };
     }, []);
 
-    // Change song
     useEffect(() => {
         const changeSong = async () => {
-            // console.log("Loading in");
+            CntDebugger.current++;
+            if (CntDebugger.current <= 1) {
+                return;
+            }
             setIsLoading(true);
             setIsPlaying(true);
+            // console.log("cnt: ", CntDebugger.current);
+            
             const audioUrl = await getAudioUrl();
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -94,37 +106,50 @@ export default function StickyAudioPlayer({ recordId, onChange = false }) {
     
             audioRef.current = new Audio(audioUrl);
             audioRef.current.onloadedmetadata = () => {
-                setDuration(audioRef.current.duration);
+                // console.log("onloadmeta", onChange);
+                setDuration(audioRef.current.duration * SCALE_FACTOR);
                 setTrackProgress(0);
+                currentTime.current = 0;
                 setIsLoading(false);
-                if (isPlaying) {
-                    audioRef.current.play();
-                    startTimer();
+                if (onLoaded) {
+                    onLoaded();
                 }
             };
+            if (isPlaying) {
+                audioRef.current.play();
+                startTimer();
+            }
         };
     
         changeSong(); 
     }, [onChange]);
 
+    const currentPercentage = duration
+    ? `${(trackProgress / duration) * 100}%`
+    : "0%";
+
+    const trackStyling = `
+        -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
+    `;
 
     return (
         <div className="sticky-audio-player">
             <AudioControls isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
             <input
                 type="range"
-                value={trackProgress}
+                value={currentTime.current}
                 step="1"
                 min="0"
-                max={duration ? duration : `${duration}`}
+                max={duration ? duration : 0}
                 className="progress"
                 onKeyUp={onScrubEnd}
                 onMouseUp={onScrubEnd}
                 onChange={(e) => onScrub(e.target.value)}
+                style={{ background: trackStyling }}
             />
-            {/* <div className="time-display">
-                {currentTime} / {duration}
-            </div> */}
+            <span className="time-display">
+                {formatTime(trackProgress / SCALE_FACTOR)} / {formatTime(duration / SCALE_FACTOR)}
+            </span>
         </div>
     );
 }

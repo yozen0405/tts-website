@@ -18,6 +18,7 @@ export default function TextToSpeech() {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [currentAudioOnChange, setcurrentAudioOnChange] = useState(false); 
 
   const MAX_CHAR_LIMIT = 5000;
@@ -82,6 +83,7 @@ export default function TextToSpeech() {
 
   const handlePlay = (id) => {
     setCurrentRecordId(id);
+    setIsAudioLoading(true);
     setcurrentAudioOnChange(!currentAudioOnChange);
   };
 
@@ -134,11 +136,12 @@ export default function TextToSpeech() {
           <AudioRecordItem
             recordId={recordId}
             onPlay={handlePlay}
+            isAudioLoading={isAudioLoading}
           />
         </div>
       )}
 
-      {currentRecordId && <StickyAudioPlayer recordId={currentRecordId} onChange={currentAudioOnChange} />}
+      {currentRecordId && <StickyAudioPlayer recordId={currentRecordId} onChange={currentAudioOnChange} onLoaded={() => { setIsAudioLoading(false); }} />}
     </div>
   );
 }
