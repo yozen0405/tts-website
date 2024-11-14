@@ -1,4 +1,4 @@
-import { uploadData, getUrl, remove } from '@aws-amplify/storage';
+import { uploadData, getUrl, remove, downloadData } from '@aws-amplify/storage';
 
 export async function uploadAudio(audioBlob) {
   const audioFile = new File([audioBlob], `audio_${Date.now()}.mp3`, { type: 'audio/mpeg' });
@@ -22,4 +22,11 @@ export async function getAudioUrl(path) {
 
 export async function deleteAudio(path) {
   await remove({ path });
+}
+
+export async function downloadAudio(path) {
+  const s3Key = await downloadData({
+    path: path
+  });
+  return s3Key.result;
 }

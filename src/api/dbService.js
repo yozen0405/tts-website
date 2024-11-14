@@ -1,10 +1,29 @@
 import { createAudioHistory, deleteAudioHistory } from '../graphql/mutations';
-import { listAudioHistories } from '../graphql/queries';
+import { getAudioHistory, listAudioHistories } from '../graphql/queries';
 import { generateClient } from 'aws-amplify/api';
 import { deleteAudio, getAudioUrl } from './audioStorage';
 import { updateAudioHistory } from '../graphql/mutations';
 
 const client = generateClient();
+
+export async function getAudioById(id) {
+    try {
+        const response = await client.graphql({
+            query: getAudioHistory,
+            variables: { id },
+        });
+
+        if (response.data.getAudioHistory) {
+            const record = await updateAudioRecord(response.data.getAudioHistory);
+            return record;
+        } else {
+            throw new Error('Audio record not found');
+        }
+    } catch (error) {
+        console.error('Error fetching audio by ID:', error);
+        throw error; 
+    }
+}
 
 export async function getAudioByUid(userId) {
     const { data } = await client.graphql({
@@ -107,8 +126,7 @@ export async function updateAudioRecord(record) {
                 },
             },
         });
-        // Update local record with new URL and updated timestamp
         return response.data.updateAudioHistory;
     }
-    return record; // Return the original record if no update is needed
+    return record; 
 }

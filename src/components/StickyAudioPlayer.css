@@ -12,6 +12,11 @@
     flex-wrap: wrap;
 }
 
+.audio-controls {
+    display: flex;
+    justify-content: center;
+}
+
 .play-pause-button {
     color: white;
     font-size: 1.5rem;
@@ -51,6 +56,15 @@
     font-size: 0.9rem;
     min-width: 70px;
     text-align: right;
+}
+
+input[type="range"] {
+    height: 5px;
+    -webkit-appearance: none;
+    border-radius: 8px;
+    background: #888;
+    cursor: pointer;
+    flex: 1;
 }
 
 /* Responsive Design */

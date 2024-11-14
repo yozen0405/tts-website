@@ -10,7 +10,7 @@ import AudioRecordItem from '../components/AudioRecordItem'; // Import the new c
 export default function History() {
     const [audioRecords, setAudioRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentRecord, setCurrentRecord] = useState(null);
+    const [currentRecordId, setCurrentRecordId] = useState(null);
     const [currentAudioOnChange, setcurrentAudioOnChange] = useState(false); 
 
     useEffect(() => {
@@ -20,9 +20,9 @@ export default function History() {
                 const userId = user.userId;
 
                 const records = await getAudioByUid(userId);
-                const recordsWithUrls = await getSortedAudio(records);
+                const sortedRecords = await getSortedAudio(records);
 
-                setAudioRecords(recordsWithUrls);
+                setAudioRecords(sortedRecords);
             } catch (error) {
                 console.error('Error fetching audio history:', error);
             } finally {
@@ -33,8 +33,8 @@ export default function History() {
         fetchAudioHistory();
     }, []);
 
-    const handlePlay = (record) => {
-        setCurrentRecord(record);
+    const handlePlay = (id) => {
+        setCurrentRecordId(id);
         setcurrentAudioOnChange(!currentAudioOnChange);
     };
 
@@ -47,14 +47,14 @@ export default function History() {
                 audioRecords.map((record) => (
                     <AudioRecordItem
                         key={record.id}
-                        record={record}
+                        recordId={record.id}
                         onPlay={handlePlay}
                     />
                 ))
             ) : (
                 <p>目前沒有任何歷史紀錄</p>
             )}
-            {currentRecord && <StickyAudioPlayer audioUrl={currentRecord.audioUrl} initialRecord={currentRecord} onChange={currentAudioOnChange} />}
+            {currentRecordId && <StickyAudioPlayer recordId={currentRecordId} onChange={currentAudioOnChange} />}
         </div>
     );
 }

@@ -13,9 +13,8 @@ import voicesData from '../assets/voices.json';
 export default function TextToSpeech() {
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
-  const [audioUrl, setAudioUrl] = useState(null);
-  const [audioRecord, setAudioRecord] = useState(null);
-  const [currentRecord, setCurrentRecord] = useState(null);
+  const [recordId, setRecordId] = useState(null);
+  const [currentRecordId, setCurrentRecordId] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,13 +33,13 @@ export default function TextToSpeech() {
       return;
     }
     setIsLoading(true);
-    setAudioUrl(null);
+    setRecordId(null);
+    setCurrentRecordId(null);
     try {
       const audioBlob = await generateAudio(text, selectedVoice);
       const audioPath = await uploadAudio(audioBlob);
       const audioSrcUrl = await getAudioUrl(audioPath);
 
-      setAudioUrl(audioSrcUrl);
       await manageAudioHistory(audioPath, audioSrcUrl);
     } catch (error) {
       console.error('Error generating audio:', error);
@@ -60,7 +59,7 @@ export default function TextToSpeech() {
         await removeOldestAudio(audioRecords);
       }
       const record = await saveNewAudio(userId, text, url, path);
-      setAudioRecord(record);
+      setRecordId(record.id);
     } catch (error) {
       console.error('Error managing audio history:', error);
     }
@@ -81,8 +80,8 @@ export default function TextToSpeech() {
     setCharCount(newText.length);
   };
 
-  const handlePlay = (record) => {
-    setCurrentRecord(record);
+  const handlePlay = (id) => {
+    setCurrentRecordId(id);
     setcurrentAudioOnChange(!currentAudioOnChange);
   };
 
@@ -129,17 +128,17 @@ export default function TextToSpeech() {
         </button>
       </div>
         
-      {audioUrl && (
+      {recordId && (
         <div className="text-to-speech-audio-area">
           <h3>播放生成的語音</h3>
           <AudioRecordItem
-            record={{...audioRecord, url: audioUrl, shortText: text }}
+            recordId={recordId}
             onPlay={handlePlay}
           />
         </div>
       )}
 
-      {currentRecord && <StickyAudioPlayer audioUrl={currentRecord.audioUrl} initialRecord={currentRecord} onChange={currentAudioOnChange} />}
+      {currentRecordId && <StickyAudioPlayer recordId={currentRecordId} onChange={currentAudioOnChange} />}
     </div>
   );
 }
