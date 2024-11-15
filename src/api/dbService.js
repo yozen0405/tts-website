@@ -25,6 +25,25 @@ export async function getAudioById(id) {
     }
 }
 
+export async function getAudioPathById(id) {
+    try {
+        const response = await client.graphql({
+            query: getAudioHistory,
+            variables: { id },
+        });
+
+        if (response.data.getAudioHistory) {
+            const record = response.data.getAudioHistory;
+            return record;
+        } else {
+            throw new Error('Audio record not found');
+        }
+    } catch (error) {
+        console.error('Error fetching audio by ID:', error);
+        throw error; 
+    }
+}
+
 export async function getAudioByUid(userId) {
     const { data } = await client.graphql({
         query: listAudioHistories,

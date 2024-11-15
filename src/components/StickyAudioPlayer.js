@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import './StickyAudioPlayer.css';
 import AudioControls from './AudioControls'
-import { getAudioById } from '../api/dbService';
+import { getAudioPathById } from '../api/dbService';
+import { createAudioUrl } from '../api/audioStorage';
 
 export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
     const SCALE_FACTOR = 10000;
@@ -16,8 +17,10 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
     const currentTime = useRef(0);
 
     const getAudioUrl = async () => {
-        const record = await getAudioById(recordId);
-        return record.audioUrl;
+        const record = await getAudioPathById(recordId);
+        const url = await createAudioUrl(record.audioPath);
+        console.log(url);
+        return url;
     };
 
     const onScrub = (value) => {    
@@ -81,6 +84,8 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
+                URL.revokeObjectURL(audioRef.current.src);
+                console.log("釋放url");
             }
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
@@ -92,11 +97,11 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
         const changeSong = async () => {
             setIsLoading(true);
             setIsPlaying(true);
-            // console.log("cnt: ", CntDebugger.current);
-            
+
             const audioUrl = await getAudioUrl();
             if (audioRef.current) {
                 audioRef.current.pause();
+                URL.revokeObjectURL(audioRef.current.src);
             }
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
@@ -140,7 +145,6 @@ export default function StickyAudioPlayer({ recordId, onChange, onLoaded }) {
                 min="0"
                 max={duration ? duration : 0}
                 className="progress"
-                onKeyUp={onScrubEnd}
                 onMouseUp={onScrubEnd}
                 onTouchEnd={onScrubEnd}
                 onChange={(e) => onScrub(e.target.value)}

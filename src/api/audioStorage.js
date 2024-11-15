@@ -30,3 +30,18 @@ export async function downloadAudio(path) {
   });
   return s3Key.result;
 }
+
+export async function createAudioUrl(path) {
+  const s3Key = await downloadData({
+    path: path
+  }).result;
+  if (s3Key?.body) {
+    // 生成 Blob
+    const blob = s3Key.body;
+    // 創建一個 Object URL
+    const objectUrl = URL.createObjectURL(blob);
+    return objectUrl; // 返回 URL 供播放
+  }
+
+  throw new Error('音頻下載失敗');
+}
