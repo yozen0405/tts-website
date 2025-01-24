@@ -1,0 +1,26 @@
+{
+  "resourceName": "ttsAudioDetail",
+  "tableName": "ttsAudioDetail",
+  "partitionKey": {
+    "fieldName": "userId",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "createdAt",
+    "fieldType": "string"
+  },
+  "gsi": [
+    {
+      "name": "userId-index",
+      "partitionKey": {
+        "fieldName": "userId",
+        "fieldType": "string"
+      },
+      "sortKey": {
+        "fieldName": "createdAt",
+        "fieldType": "string"
+      }
+    }
+  ],
+  "triggerFunctions": []
+}

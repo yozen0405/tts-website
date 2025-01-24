@@ -1,0 +1,10 @@
+{
+  "body": "{\"text\": \"Hello, this is a test!\"}",
+  "requestContext": {
+      "authorizer": {
+          "claims": {
+              "sub": "user123"
+          }
+      }
+  }
+}

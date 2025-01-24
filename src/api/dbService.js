@@ -138,7 +138,7 @@ export async function updateAudioRecord(record) {
         const newUrl = await getAudioUrl(record.audioPath);
         const response = await client.graphql({
             query: updateAudioHistory,
-            variables: {
+               variables: {
                 input: {
                     id: record.id,
                     audioUrl: newUrl,

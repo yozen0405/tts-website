@@ -1,9 +1,11 @@
 import { Amplify } from 'aws-amplify';
 import { Hub, I18n } from 'aws-amplify/utils';
 import { Authenticator } from '@aws-amplify/ui-react';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 import '@aws-amplify/ui-react/styles.css';
 import config from './amplifyconfiguration.json';
-import { zhDict } from './auth/lang/zhDict'; 
+import { zhDict } from './assets/zhDict'; 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import TextToSpeech from './pages/TextToSpeech';
 import Home from './pages/Home';
@@ -42,14 +44,16 @@ export default function App() {
     <div className={isAuthenticated ? '' : 'auth-center-container'}>
       <Authenticator>
         {({ signOut, user }) => (
-          <Router>
-            <Navbar user={user} onSignOut={signOut} />
-            <Routes>
-              <Route path="/" element={<Home user={user} />} />
-              <Route path="/text-to-speech" element={<TextToSpeech />} />
-              <Route path="/history" element={<History />} />
-            </Routes>
-          </Router>
+          <Provider store={store}>
+            <Router>
+              <Navbar user={user} onSignOut={signOut} />
+              <Routes>
+                <Route path="/" element={<Home user={user} />} />
+                <Route path="/text-to-speech" element={<TextToSpeech />} />
+                <Route path="/history" element={<History />} />
+              </Routes>
+            </Router>
+          </Provider>
         )}
       </Authenticator>
     </div>

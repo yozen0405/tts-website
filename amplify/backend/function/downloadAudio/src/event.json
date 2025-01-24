@@ -1,0 +1,10 @@
+{
+  "body": "{\"recordId\": \"5529e4c8-91a6-4b91-b9dc-785dd4e457fd\", \"createdAt\": \"2025-01-24T05:20:29.355Z\"}",
+  "requestContext": {
+      "authorizer": {
+          "claims": {
+              "sub": "user123"
+          }
+      }
+  }
+}

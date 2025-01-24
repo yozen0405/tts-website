@@ -1,0 +1,45 @@
+{
+  "permissions": {
+    "auth": {
+      "tts3c1965c7": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "storage": {
+      "s35377b734": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "ttsAudioDetail": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "ttsaudioUtils",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "azureRegion",
+      "environmentVariableName": "AZURE_REGION"
+    },
+    {
+      "cloudFormationParameterName": "azureSubscriptionKey",
+      "environmentVariableName": "AZURE_SUBSCRIPTION_KEY"
+    }
+  ]
+}
