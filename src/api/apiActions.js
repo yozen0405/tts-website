@@ -89,3 +89,30 @@ export async function downloadAudio(createdAt) {
     }
 };
 
+
+export async function deleteAudioHistory(createdAt) {
+    try {
+        const user = await getCurrentUser();
+        const restOperation = post({
+            apiName: "ttsHandler", 
+            path: "/deleteAudioHistory", 
+            options: {
+                body: { 
+                    userId: user.userId,
+                    createdAt 
+                },
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        });
+        
+        const { body } = await restOperation.response;
+        const response = await body.json();
+
+        return response;
+    } catch (error) {
+        console.error("Error downloading audio:", error);
+        throw error;
+    }
+};

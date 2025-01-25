@@ -39,6 +39,19 @@
           "delete"
         ]
       }
+    },
+    "/deleteAudioHistory": {
+      "name": "/deleteAudioHistory",
+      "lambdaFunction": "deleteAudioHistory",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
     }
   }
 }

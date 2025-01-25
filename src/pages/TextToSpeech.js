@@ -1,7 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './TextToSpeech.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedLanguage, setSelectedVoice, setText, setPitch, setSpeed } from '../redux/slices/paramSlice';
+import {
+	setSelectedLanguage,
+	setSelectedVoice,
+	setText,
+	setPitch,
+	setSpeed,
+	setRecord,
+	setIsLoading,
+	deleteAudioRecord
+} from '../redux/slices/paramSlice';
+import {
+	resetState
+} from '../redux/slices/audioHistorySlice';
 import VoiceDropdown from '../components/VoiceDropdown';
 import Loader from '../components/Loader';
 import AudioRecordItem from '../components/AudioRecordItem';
@@ -16,11 +28,10 @@ export default function TextToSpeech() {
 		selectedVoice,
 		text,
 		speed,
-		pitch
+		pitch,
+		record,
+    	isLoading,
 	} = useSelector((state) => state.voices);
-
-	const [record, setRecord] = useState(null);
-	const [isLoading, setIsLoading] = useState(false);
 
 	const formatToAzureValue = (value) => {
 		const formatted = value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`;
@@ -30,20 +41,25 @@ export default function TextToSpeech() {
 	const handleGenerateAudio = async () => {
 		if (!text || !selectedVoice || isLoading) return;
 
-		setIsLoading(true);
-		setRecord(null);
+		dispatch(setIsLoading(true));
+    	dispatch(setRecord(null));
 
 		try {
 			const formattedSpeed = formatToAzureValue(speed);
 			const formattedPitch = formatToAzureValue(pitch);
 
 			const record = await uploadAudio(text, selectedLanguage.id, selectedVoice.id, formattedSpeed, formattedPitch);
-			setRecord(record);
+			dispatch(setRecord(record));
+			dispatch(resetState());
 		} catch (error) {
 			console.error('Error generating audio:', error);
 		} finally {
-			setIsLoading(false);
+			dispatch(setIsLoading(false));
 		}
+	};
+
+	const handleDelete = async (createdAt) => {
+		await dispatch(deleteAudioRecord(createdAt));
 	};
 
 	return (
@@ -112,7 +128,10 @@ export default function TextToSpeech() {
 			{record && (
 				<div className="text-to-speech-audio-area">
 					<h3>播放生成的語音</h3>
-					<AudioRecordItem record={record} />
+					<AudioRecordItem 
+						record={record} 
+						onDelete={handleDelete}
+					/>
 				</div>
 			)}
 		</div>

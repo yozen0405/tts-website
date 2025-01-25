@@ -1,0 +1,27 @@
+{
+  "lambdaLayers": [],
+  "permissions": {
+    "auth": {
+      "tts3c1965c7": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "storage": {
+      "s35377b734": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "ttsAudioDetail": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  }
+}

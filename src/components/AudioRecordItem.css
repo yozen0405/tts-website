@@ -25,6 +25,11 @@
   width: 100%;
 }
 
+.audio-record-actions {
+  display: flex;
+
+}
+
 .audio-record-actions button {
   font-size: 2rem;
   color: #34874c;

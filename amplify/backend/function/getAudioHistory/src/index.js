@@ -36,51 +36,52 @@ exports.handler = async (event) => {
           	ScanIndexForward: false,
         };
 
+        console.time("DynamoDB Query Time");
         const result = await dynamoDB.query(queryParams).promise();
-        const records = result.Items;
-
-        if (!records || records.length === 0) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({ message: "No audio records found for this user." }),
-            };
-        }
+        console.timeEnd("DynamoDB Query Time");
+        const records = result.Items || [];
 
         // Step 3: 檢查每個記錄的 URL 是否過期，並在需要時更新
         const now = new Date();
+        const updatedRecords = [];
+        const expiredRecords = [];
 
-        const updatedRecords = await Promise.all(
-            records.map(async (record) => {
-                const updatedAt = new Date(record.updatedAt);
+        console.time("Scall all record time");
+        for (const record of records) {
+            if (isExpired(new Date(record.updatedAt))) {
+                // 如果 URL 過期
+                const bucketName = process.env.STORAGE_S35377B734_BUCKETNAME;
+                const newUrl = generateSignedUrl(bucketName, record.filePath);
 
-                if (isExpired(updatedAt)) {
-                    // 如果過期，生成新的簽名 URL
-                    const bucketName = process.env.STORAGE_S35377B734_BUCKETNAME;
-                    const filePath = record.filePath;
+                expiredRecords.push({
+                    ...record,
+                    url: newUrl,
+                    updatedAt: now.toISOString(),
+                });
+            } else {
+                // 如果 URL 沒過期
+                updatedRecords.push(record);
+            }
+        }
+        console.timeEnd("Scall all record time");
 
-                    const newUrl = generateSignedUrl(bucketName, filePath);
-
-                    // 更新記錄的 URL 和 updatedAt
-                    const updateParams = {
-                        TableName: tableName,
-                        Key: { userId: record.userId, createdAt: record.createdAt }, // 必須匹配主鍵結構
-                        UpdateExpression: "set #url = :url, updatedAt = :updatedAt",
-                        ExpressionAttributeNames: { "#url": "url" },
-                        ExpressionAttributeValues: {
-                            ":url": newUrl,
-                            ":updatedAt": now.toISOString(),
+        // Step 3: 批量更新 DynamoDB
+        console.time("Batch update time");
+        if (expiredRecords.length > 0) {
+            const batchWriteParams = {
+                RequestItems: {
+                    [tableName]: expiredRecords.map((record) => ({
+                        PutRequest: {
+                            Item: record,
                         },
-                        ReturnValues: "ALL_NEW",
-                    };
+                    })),
+                },
+            };
 
-                    const updatedRecord = await dynamoDB.update(updateParams).promise();
-                    return updatedRecord.Attributes;
-                } else {
-                    // 如果未過期，直接返回現有的記錄
-                    return record;
-                }
-            })
-        );
+            await dynamoDB.batchWrite(batchWriteParams).promise();
+            updatedRecords.push(...expiredRecords); // 合併已更新的記錄
+        }
+        console.timeEnd("Batch update time");
 
         // Step 4: 返回成功響應
         return {

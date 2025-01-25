@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { downloadAudio } from '../api/apiActions';
 import download from 'downloadjs';
 import './AudioRecordItem.css';
+import ConfirmationModal from './ConfirmationModal';
 import { RotatingLines } from 'react-loader-spinner';
+import { useDispatch } from 'react-redux';
+import { fetchAudioHistory, init } from '../redux/slices/audioHistorySlice';
 
-export default function AudioRecordItem({ record }) {
+export default function AudioRecordItem({ record, onDelete }) {
+    const dispatch = useDispatch();
     const MAX_CHARS = process.env.REACT_APP_MAX_AUDIO_TEXT_CHARS || 50;
+
     const [isDownloading, setIsDownloading] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const handleDownload = async () => {
         setIsDownloading(true);
@@ -31,12 +38,29 @@ export default function AudioRecordItem({ record }) {
         ? `${record.description.slice(0, MAX_CHARS)}...`
         : record.description;
 
+    const handleDelete = () => {
+        setShowConfirmModal(true); 
+    };
+
+    const confirmDelete = async () => {
+        setIsDeleting(true);
+        setShowConfirmModal(false);
+        if (onDelete) {
+            await onDelete(record.createdAt);
+        }
+        setIsDeleting(false);
+    };
+
+    const cancelDelete = () => {
+        setShowConfirmModal(false);
+    };
+
     return (
         <div className="audio-record-item">
             <div className='audio-first-row'>
                 <p className="audio-record-title">{truncatedDescription}</p>
                 <div className="audio-record-actions">
-                <button onClick={handleDownload} disabled={isDownloading}>
+                    <button onClick={handleDownload} disabled={isDownloading}>
                         {isDownloading ? (
                             <RotatingLines
                                 strokeColor="#34874c"
@@ -48,14 +72,39 @@ export default function AudioRecordItem({ record }) {
                             <FontAwesomeIcon icon={faDownload} />
                         )}
                     </button>
+                    <button onClick={handleDelete} className="delete-button">
+                        {isDeleting ? (
+                            <RotatingLines
+                                strokeColor="#34874c"
+                                animationDuration="0.75"
+                                width="35"
+                                visible={true}
+                            />
+                        ) : (
+                            <FontAwesomeIcon icon={faTrash} />
+                        )}
+                    </button>
                 </div>
                 
             </div>
             
             <audio controls>
-                <source src={record.url} type="audio/mpeg" />
+                <source 
+                    src={record.url} 
+                    onError={() => {
+                        dispatch(init());
+                        dispatch(fetchAudioHistory());
+                    }} 
+                    type="audio/mpeg" />
                 您的瀏覽器不支援音頻元素。
             </audio>
+
+            <ConfirmationModal
+                isVisible={showConfirmModal}
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
+                message="確定要刪除此記錄？"
+            />
         </div>
     );
 }

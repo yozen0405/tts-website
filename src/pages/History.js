@@ -1,31 +1,21 @@
-import { useEffect, useState } from 'react';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAudioHistory, deleteAudioRecord } from '../redux/slices/audioHistorySlice';
 import './History.css';
-import { getAudioHistory } from '../api/apiActions';
 import Loader from '../components/Loader';
 import AudioRecordItem from '../components/AudioRecordItem'; 
 
 export default function History() {
-    const [audioRecords, setAudioRecords] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const dispatch = useDispatch();
+    const { audioRecords, isLoading } = useSelector((state) => state.audioHistory);
 
     useEffect(() => {
-        const fetchAudioHistory = async () => {
-            try {
-                // const user = await getCurrentUser();
-                // const userId = user.userId;
+        dispatch(fetchAudioHistory());
+    }, [dispatch]);
 
-                const records = await getAudioHistory();
-                setAudioRecords(records);
-            } catch (error) {
-                console.error('Error fetching audio history:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchAudioHistory();
-    }, []);
+    const handleDelete = async (createdAt) => {
+        await dispatch(deleteAudioRecord(createdAt));
+    };
 
     return (
         <div className="history-container">
@@ -37,6 +27,7 @@ export default function History() {
                     <AudioRecordItem
                         key={record.createdAt}
                         record={record}
+                        onDelete={handleDelete}
                     />
                 ))
             ) : (

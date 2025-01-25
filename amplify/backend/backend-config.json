@@ -25,6 +25,14 @@
           ],
           "category": "function",
           "resourceName": "getAudioHistory"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "deleteAudioHistory"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -60,6 +68,36 @@
     }
   },
   "function": {
+    "deleteAudioHistory": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "tts3c1965c7"
+        },
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "s35377b734"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ttsAudioDetail"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "downloadAudio": {
       "build": true,
       "dependsOn": [
@@ -178,6 +216,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_deleteAudioHistory_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteAudioHistory"
+        }
+      ]
+    },
+    "AMPLIFY_function_deleteAudioHistory_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "deleteAudioHistory"
+        }
+      ]
+    },
     "AMPLIFY_function_downloadAudio_deploymentBucketName": {
       "usedBy": [
         {

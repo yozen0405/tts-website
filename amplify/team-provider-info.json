@@ -37,7 +37,11 @@
         },
         "getAudioHistory": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
-          "s3Key": "amplify-builds/getAudioHistory-5137574b776c45757472-build.zip"
+          "s3Key": "amplify-builds/getAudioHistory-6a794445366770456d68-build.zip"
+        },
+        "deleteAudioHistory": {
+          "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
+          "s3Key": "amplify-builds/deleteAudioHistory-4f455a544f6f516d704d-build.zip"
         }
       },
       "api": {

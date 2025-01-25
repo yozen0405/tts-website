@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import voicesData from '../../assets/voices.json';
+import { deleteAudioHistory } from '../../api/apiActions'
 
 const paramSlice = createSlice({
   name: 'paramSlice',
@@ -16,6 +17,8 @@ const paramSlice = createSlice({
         )
       : null,
     error: null,
+    record: null, 
+    isLoading: false, 
   },
   reducers: {
     setSelectedLanguage(state, action) {
@@ -36,8 +39,26 @@ const paramSlice = createSlice({
     setPitch(state, action) {
       state.pitch = action.payload;
     },
+    setRecord(state, action) {
+      state.record = action.payload; 
+    },
+    setIsLoading(state, action) {
+      state.isLoading = action.payload;
+    },
+    setError(state, action) {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { setSelectedLanguage, setSelectedVoice, setText, setSpeed, setPitch } = paramSlice.actions;
+export const { setSelectedLanguage, setSelectedVoice, setText, setSpeed, setPitch, setRecord, setIsLoading, setError } = paramSlice.actions;
 export default paramSlice.reducer;
+
+export const deleteAudioRecord = (createdAt) => async (dispatch) => {
+  try {
+      await deleteAudioHistory(createdAt);
+      dispatch(setRecord(null));
+  } catch (error) {
+      dispatch(setError(error.message));
+  }
+};
