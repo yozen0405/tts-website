@@ -55,26 +55,31 @@ export default function TextToSpeech() {
 			dispatch(setRecord(record));
 			dispatch(resetState());
 		} catch (error) {
-			console.error('Error generating audio:', error);
-			dispatch(setError(error.errorCode))
+			const errorBody = JSON.parse(error.response.body); // 從 response 解析 JSON
+			console.log("Parsed Error:", errorBody);
+			dispatch(setError(errorBody));
+			// console.error('Error generating audio:', body);
 		} finally {
 			dispatch(setIsLoading(false));
 		}
 	};
 
 	const showErrorToast = (error) => {
-		if (error === 'INSUFFICIENT_QUOTA') {
-			toast.error('您的額度已用完，請升級套餐');
-		} else if (error === 'INTERNAL_SERVER_ERROR') {
-			toast.error('系統出現問題，請稍後再試');
+		if (error.errorCode === 'INSUFFICIENT_QUOTA') {
+			toast.warning(`您的額度只剩下 ${error.details.quotaLimit - error.details.quotaUsed} 個字，請升級`);
+		} else if (error.errorCode === 'CHAR_LIMIT_EXCEEDED') {
+			toast.warning(`您最多只能打 ${error.details.charLimit} 個字（目前 ${error.details.charCount}個字）`);
+		} else if (error.errorCode === 'INTERNAL_SERVER_ERROR') {
+			toast.error('系統出現問題，請稍後再試，並聯絡主管');
 		} else {
-			toast.error('發生未知錯誤');
+			toast.error('發生未知錯誤，請聯絡主管');
 		}
 	};
 
 	// 當 error 發生時顯示 toast
 	useEffect(() => {
 		if (error) {
+			console.log(error);
 			showErrorToast(error);
 			dispatch(setError(null));
 		}

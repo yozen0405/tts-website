@@ -6,6 +6,9 @@
 	STORAGE_TTSAUDIODETAIL_ARN
 	STORAGE_TTSAUDIODETAIL_NAME
 	STORAGE_TTSAUDIODETAIL_STREAMARN
+	STORAGE_TTSUSERTABLE_ARN
+	STORAGE_TTSUSERTABLE_NAME
+	STORAGE_TTSUSERTABLE_STREAMARN
 Amplify Params - DO NOT EDIT */
 
 const AWS = require('aws-sdk');
@@ -13,6 +16,16 @@ const axios = require('axios');
 const { generateSignedUrl } = require("/opt/nodejs/utils");
 const s3 = new AWS.S3();
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+const userTable = process.env.STORAGE_TTSUSERTABLE_NAME;
+
+class ApiError extends Error {
+    constructor(errorCode, message, details = {}) {
+        super(message);
+        this.errorCode = errorCode;
+        this.details = details;
+    }
+}
 
 exports.handler = async (event) => {
     try {
@@ -31,6 +44,28 @@ exports.handler = async (event) => {
                 body: JSON.stringify({ message: 'Invalid input. Text is required.' }),
             };
         }
+
+        // 檢查用戶配額
+        const user = await getUserQuota(userId);
+        const charCount = text.length;
+
+        if (charCount > user.charLimit) {
+            throw new ApiError('CHAR_LIMIT_EXCEEDED', 'The text exceeds the character limit for your plan.', {
+                charLimit: user.charLimit,
+                charCount,
+            });
+        }
+
+        if (user.quotaUsed + charCount > user.quotaLimit) {
+            throw new ApiError('INSUFFICIENT_QUOTA', 'You have exceeded your quota for generating audio.', {
+                quotaLimit: user.quotaLimit,
+                quotaUsed: user.quotaUsed,
+                charCount,
+            });
+        }
+
+        // 更新用戶配額
+        await updateUserQuota(userId, user.quotaUsed + charCount);
 
         await checkAndRemoveOldRecords(userId);
 
@@ -83,6 +118,21 @@ exports.handler = async (event) => {
             }),
         };
     } catch (error) {
+        if (error instanceof ApiError) {
+            return {
+                statusCode: 400,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+                },
+                body: JSON.stringify({
+                    errorCode: error.errorCode,
+                    message: error.message,
+                    details: error.details,
+                }),
+            };
+        }
         console.error('Error:', error.message);
         return {
             statusCode: 500,
@@ -91,9 +141,49 @@ exports.handler = async (event) => {
                 "Access-Control-Allow-Headers": "*",
                 "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
             },
-            body: JSON.stringify({ message: 'Internal Server Error', error: error.message }),
+            body: JSON.stringify({
+                errorCode: 'INTERNAL_SERVER_ERROR',
+                message: 'An unexpected error occurred.',
+            })
         };
     }
+};
+
+/**
+ * 從 DynamoDB 獲取用戶配額
+ * @param {string} userId
+ * @returns {Promise<Object>} 用戶的配額資訊
+ */
+const getUserQuota = async (userId) => {
+    const params = {
+        TableName: userTable,
+        Key: { userId },
+    };
+
+    const result = await dynamoDB.get(params).promise();
+    if (!result.Item) {
+        throw new ApiError('USER_NOT_FOUND', 'User not found in quota table.');
+    }
+
+    return result.Item;
+};
+
+/**
+ * 更新用戶配額
+ * @param {string} userId
+ * @param {number} newQuotaUsed
+ */
+const updateUserQuota = async (userId, newQuotaUsed) => {
+    const params = {
+        TableName: userTable,
+        Key: { userId },
+        UpdateExpression: 'SET quotaUsed = :quotaUsed',
+        ExpressionAttributeValues: {
+            ':quotaUsed': newQuotaUsed,
+        },
+    };
+
+    await dynamoDB.update(params).promise();
 };
 
 // 檢查並刪除最舊的記錄（如果超過 10 筆）

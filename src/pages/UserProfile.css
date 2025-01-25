@@ -1,0 +1,72 @@
+/* user-profile.css */
+.user-profile-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+.user-profile-card {
+    background: linear-gradient(to right, #3b82f6, #9333ea);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.user-profile-card h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.user-profile-card p {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.user-profile-card.free {
+    background: linear-gradient(to right, #773e06, #c48857); /* 銅色 */
+}
+
+/* Premium 層級 (銀色) */
+.user-profile-card.premium {
+    background: linear-gradient(to right, #6d6d6d, #b7b6b6); /* 銀色 */
+}
+
+/* Enterprise 層級 (金色) */
+.user-profile-card.enterprise {
+    background: linear-gradient(to right, #ff9100, #f0be34); /* 金色 */
+}
+
+/* 默認樣式 */
+.user-profile-card.default {
+    background: linear-gradient(to right, #3b82f6, #9333ea); /* 藍紫色 */
+}
+
+.user-profile-details {
+    padding: 0px 10px;
+    border-radius: 10px;
+}
+
+.user-profile-details h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #b6b6b6;
+}
+
+.user-profile-info-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-profile-info-list li {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.user-profile-info-list strong {
+    font-weight: bold;
+}

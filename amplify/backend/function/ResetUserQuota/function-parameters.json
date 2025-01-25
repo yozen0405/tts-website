@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "storage": {
+      "ttsUserTable": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

@@ -52,6 +52,19 @@
           "delete"
         ]
       }
+    },
+    "/getUserData": {
+      "name": "/getUserData",
+      "lambdaFunction": "getUserData",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
     }
   }
 }

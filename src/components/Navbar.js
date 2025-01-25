@@ -25,6 +25,7 @@ export default function Navbar({ user, onSignOut }) {
         <Link to="/" className="navbar-link" onClick={toggleMenu}>主畫面</Link>
         <Link to="/text-to-speech" className="navbar-link" onClick={toggleMenu}>語音轉換器</Link>
         <Link to="/history" className="navbar-link" onClick={toggleMenu}>歷史紀錄</Link>
+        <Link to="/profile" className="navbar-link" onClick={toggleMenu}>個人資料</Link>
         <a className={"logout-button navbar-link"} onClick={onSignOut}>登出</a>
       </div>
     </nav>

@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import Navbar from './components/Navbar'; 
 import './App.css';
 import History from './pages/History'
+import UserProfile from './pages/UserProfile'
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from 'aws-amplify/auth';
 import 'react-toastify/dist/ReactToastify.css';
@@ -53,8 +54,16 @@ export default function App() {
                 <Route path="/" element={<Home user={user} />} />
                 <Route path="/text-to-speech" element={<TextToSpeech />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/profile" element={<UserProfile />} />
               </Routes>
-              <ToastContainer position="top-center"/>
+              <ToastContainer 
+                position="top-center"
+                hideProgressBar={true}
+                pauseOnHover={true}
+                autoClose={8000}
+                theme='colored'
+                className='custom-toast'
+              />
             </Router>
           </Provider>
         )}

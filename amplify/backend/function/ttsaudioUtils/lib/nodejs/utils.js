@@ -27,7 +27,32 @@ const isExpired = (updatedAt) => {
     return now - new Date(updatedAt) >= expireTime;
 };
 
+const usagePlans = [
+    { plan: "free", quotaLimit: 1000, charLimit: 50 },
+    { plan: "premium", quotaLimit: 10000, charLimit: 800 },
+    { plan: "enterprise", quotaLimit: 50000, charLimit: 2000 },
+];
+
+/**
+ * 獲取用戶的升級使用計劃
+ * @param {Object} param 包含用戶級別的參數 (例如 { level: 'premium' })
+ * @returns {Object} 包含計劃名稱 (plan) 和對應的配額 (quota)
+ */
+const getUsagePlan = (param) => {
+    const planMap = new Map(usagePlans.map((plan, index) => [plan.plan, index]));
+
+    if (param && planMap.has(param)) {
+        const currentIndex = planMap.get(param);
+        const nextIndex = Math.min(currentIndex + 1, usagePlans.length - 1); 
+        return usagePlans[nextIndex]; 
+    }
+
+    // 默認返回 free 計劃
+    return usagePlans[0];
+};
+
 module.exports = {
     generateSignedUrl,
     isExpired,
+    getUsagePlan
 };

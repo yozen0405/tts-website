@@ -29,7 +29,7 @@ export async function uploadAudio(text, language, voice, speed, pitch) {
         // console.log("Upload Success:", response);
         return response.record; 
     } catch (error) {
-        console.error("Error uploading audio:", error);
+        // console.error("Error uploading audio:", body);
         throw error;
     }  
 };
@@ -109,6 +109,35 @@ export async function deleteAudioHistory(createdAt) {
         
         const { body } = await restOperation.response;
         const response = await body.json();
+
+        return response;
+    } catch (error) {
+        console.error("Error downloading audio:", error);
+        throw error;
+    }
+};
+
+
+export async function getUserData() {
+    try {
+        const user = await getCurrentUser();
+        const restOperation = post({
+            apiName: "ttsHandler", 
+            path: "/getUserData", 
+            options: {
+                body: { 
+                    userId: user.userId,
+                },
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        });
+        
+        const { body } = await restOperation.response;
+        const response = await body.json();
+
+        response.email = user?.signInDetails?.loginId;
 
         return response;
     } catch (error) {

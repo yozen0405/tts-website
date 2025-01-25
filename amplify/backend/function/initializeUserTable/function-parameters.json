@@ -9,18 +9,6 @@
       ]
     },
     "storage": {
-      "s35377b734": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ],
-      "ttsAudioDetail": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ],
       "ttsUserTable": [
         "create",
         "read",
@@ -36,16 +24,6 @@
       "env": "dev",
       "version": "Always choose latest version",
       "isLatestVersionSelected": true
-    }
-  ],
-  "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "azureRegion",
-      "environmentVariableName": "AZURE_REGION"
-    },
-    {
-      "cloudFormationParameterName": "azureSubscriptionKey",
-      "environmentVariableName": "AZURE_SUBSCRIPTION_KEY"
     }
   ]
 }

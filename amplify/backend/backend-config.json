@@ -33,6 +33,14 @@
           ],
           "category": "function",
           "resourceName": "deleteAudioHistory"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "getUserData"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -42,7 +50,17 @@
   "auth": {
     "tts3c1965c7": {
       "customAuth": false,
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "tts3c1965c7PostConfirmation",
+          "triggerProvider": "Cognito"
+        }
+      ],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -68,6 +86,22 @@
     }
   },
   "function": {
+    "ResetUserQuota": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ttsUserTable"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "deleteAudioHistory": {
       "build": true,
       "dependsOn": [
@@ -172,6 +206,75 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "getUserData": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ttsUserTable"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "initializeUserTable": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "tts3c1965c7"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ttsUserTable"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "ttsaudioUtils"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "tts3c1965c7PostConfirmation": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "ttsaudioUtils"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ttsUserTable"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "ttsaudioUtils": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -205,6 +308,15 @@
         },
         {
           "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ttsUserTable"
+        },
+        {
+          "attributes": [
             "Arn"
           ],
           "category": "function",
@@ -216,6 +328,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_ResetUserQuota_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ResetUserQuota"
+        }
+      ]
+    },
+    "AMPLIFY_function_ResetUserQuota_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ResetUserQuota"
+        }
+      ]
+    },
     "AMPLIFY_function_deleteAudioHistory_deploymentBucketName": {
       "usedBy": [
         {
@@ -261,6 +389,54 @@
         {
           "category": "function",
           "resourceName": "getAudioHistory"
+        }
+      ]
+    },
+    "AMPLIFY_function_getUserData_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getUserData"
+        }
+      ]
+    },
+    "AMPLIFY_function_getUserData_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getUserData"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeUserTable_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeUserTable"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeUserTable_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeUserTable"
+        }
+      ]
+    },
+    "AMPLIFY_function_tts3c1965c7PostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "tts3c1965c7PostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_tts3c1965c7PostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "tts3c1965c7PostConfirmation"
         }
       ]
     },
@@ -320,6 +496,10 @@
       "service": "S3"
     },
     "ttsAudioDetail": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "ttsUserTable": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"
     }

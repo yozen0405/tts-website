@@ -20,26 +20,6 @@
       "Type": "String",
       "Default": "authtts3c1965c7UserPoolId"
     },
-    "storages35377b734BucketName": {
-      "Type": "String",
-      "Default": "storages35377b734BucketName"
-    },
-    "functionttsaudioUtilsArn": {
-      "Type": "String",
-      "Default": "functionttsaudioUtilsArn"
-    },
-    "storagettsAudioDetailName": {
-      "Type": "String",
-      "Default": "storagettsAudioDetailName"
-    },
-    "storagettsAudioDetailArn": {
-      "Type": "String",
-      "Default": "storagettsAudioDetailArn"
-    },
-    "storagettsAudioDetailStreamArn": {
-      "Type": "String",
-      "Default": "storagettsAudioDetailStreamArn"
-    },
     "storagettsUserTableName": {
       "Type": "String",
       "Default": "storagettsUserTableName"
@@ -52,11 +32,9 @@
       "Type": "String",
       "Default": "storagettsUserTableStreamArn"
     },
-    "azureRegion": {
-      "Type": "String"
-    },
-    "azureSubscriptionKey": {
-      "Type": "String"
+    "functionttsaudioUtilsArn": {
+      "Type": "String",
+      "Default": "functionttsaudioUtilsArn"
     }
   },
   "Conditions": {
@@ -89,12 +67,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "uploadttsAudio",
+            "initializeUserTable",
             {
               "Fn::Join": [
                 "",
                 [
-                  "uploadttsAudio",
+                  "initializeUserTable",
                   "-",
                   {
                     "Ref": "env"
@@ -115,18 +93,6 @@
             "AUTH_TTS3C1965C7_USERPOOLID": {
               "Ref": "authtts3c1965c7UserPoolId"
             },
-            "STORAGE_S35377B734_BUCKETNAME": {
-              "Ref": "storages35377b734BucketName"
-            },
-            "STORAGE_TTSAUDIODETAIL_NAME": {
-              "Ref": "storagettsAudioDetailName"
-            },
-            "STORAGE_TTSAUDIODETAIL_ARN": {
-              "Ref": "storagettsAudioDetailArn"
-            },
-            "STORAGE_TTSAUDIODETAIL_STREAMARN": {
-              "Ref": "storagettsAudioDetailStreamArn"
-            },
             "STORAGE_TTSUSERTABLE_NAME": {
               "Ref": "storagettsUserTableName"
             },
@@ -135,12 +101,6 @@
             },
             "STORAGE_TTSUSERTABLE_STREAMARN": {
               "Ref": "storagettsUserTableStreamArn"
-            },
-            "AZURE_REGION": {
-              "Ref": "azureRegion"
-            },
-            "AZURE_SUBSCRIPTION_KEY": {
-              "Ref": "azureSubscriptionKey"
             }
           }
         },
@@ -150,7 +110,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs18.x",
         "Layers": [
           {
             "Ref": "functionttsaudioUtilsArn"
@@ -165,12 +125,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "ttsLambdaRole0cc4ca4d",
+            "ttsLambdaRole844434cd",
             {
               "Fn::Join": [
                 "",
                 [
-                  "ttsLambdaRole0cc4ca4d",
+                  "ttsLambdaRole844434cd",
                   "-",
                   {
                     "Ref": "env"
@@ -358,82 +318,6 @@
                       {
                         "Ref": "authtts3c1965c7UserPoolId"
                       }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": "s3:ListBucket",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:s3:::",
-                      {
-                        "Ref": "storages35377b734BucketName"
-                      }
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:DeleteObject"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:s3:::",
-                      {
-                        "Ref": "storages35377b734BucketName"
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Put*",
-                "dynamodb:Create*",
-                "dynamodb:BatchWriteItem",
-                "dynamodb:PartiQLInsert",
-                "dynamodb:Get*",
-                "dynamodb:BatchGetItem",
-                "dynamodb:List*",
-                "dynamodb:Describe*",
-                "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:PartiQLSelect",
-                "dynamodb:Update*",
-                "dynamodb:RestoreTable*",
-                "dynamodb:PartiQLUpdate",
-                "dynamodb:Delete*",
-                "dynamodb:PartiQLDelete"
-              ],
-              "Resource": [
-                {
-                  "Ref": "storagettsAudioDetailArn"
-                },
-                {
-                  "Fn::Join": [
-                    "/",
-                    [
-                      {
-                        "Ref": "storagettsAudioDetailArn"
-                      },
-                      "index/*"
                     ]
                   ]
                 }

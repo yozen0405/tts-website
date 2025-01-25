@@ -6,15 +6,18 @@ import download from 'downloadjs';
 import './AudioRecordItem.css';
 import ConfirmationModal from './ConfirmationModal';
 import { RotatingLines } from 'react-loader-spinner';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchAudioHistory, init } from '../redux/slices/audioHistorySlice';
+import { toast } from 'react-toastify';
 
 export default function AudioRecordItem({ record, onDelete }) {
     const dispatch = useDispatch();
+    const { isDeleting } = useSelector((state) => state.audioHistory);
+
     const MAX_CHARS = process.env.REACT_APP_MAX_AUDIO_TEXT_CHARS || 50;
 
     const [isDownloading, setIsDownloading] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [isCurrentItemDeleting, setisCurrentItemDeleting] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const handleDownload = async () => {
@@ -39,16 +42,22 @@ export default function AudioRecordItem({ record, onDelete }) {
         : record.description;
 
     const handleDelete = () => {
-        setShowConfirmModal(true); 
+        if (isDeleting && !isCurrentItemDeleting) {
+            toast.error('正在刪除此音檔，請稍候');
+        } else if (isDeleting) {
+            toast.error('正在刪除音其他音檔，請稍候再按');
+        } else {
+            setShowConfirmModal(true); 
+        }
     };
 
     const confirmDelete = async () => {
-        setIsDeleting(true);
+        setisCurrentItemDeleting(true);
         setShowConfirmModal(false);
         if (onDelete) {
             await onDelete(record.createdAt);
         }
-        setIsDeleting(false);
+        setisCurrentItemDeleting(false);
     };
 
     const cancelDelete = () => {
@@ -73,7 +82,7 @@ export default function AudioRecordItem({ record, onDelete }) {
                         )}
                     </button>
                     <button onClick={handleDelete} className="delete-button">
-                        {isDeleting ? (
+                        {isCurrentItemDeleting ? (
                             <RotatingLines
                                 strokeColor="#34874c"
                                 animationDuration="0.75"

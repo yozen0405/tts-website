@@ -10,7 +10,8 @@
       "StackName": "amplify-tts-dev-9f738",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:605134459632:stack/amplify-tts-dev-9f738/cc21d830-a02c-11ef-81bd-0631e24394d1",
       "AmplifyAppId": "d4fdpf0b4bn59",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-tts-dev-9f738-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-tts-dev-9f738-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-tts-dev-9f738-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
@@ -18,12 +19,13 @@
       },
       "storage": {
         "s35377b734": {},
-        "ttsAudioDetail": {}
+        "ttsAudioDetail": {},
+        "ttsUserTable": {}
       },
       "function": {
         "uploadttsAudio": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
-          "s3Key": "amplify-builds/uploadttsAudio-375676636d656b6e446d-build.zip",
+          "s3Key": "amplify-builds/uploadttsAudio-36436674597532666235-build.zip",
           "azureRegion": "japaneast",
           "azureSubscriptionKey": "BO4j30UEdAIolILbEHJVemdIHdlIh1YOtEsza6bFmBqAysKnDC7uJQQJ99AKACi0881XJ3w3AAAYACOGL1J5"
         },
@@ -33,7 +35,7 @@
         },
         "ttsaudioUtils": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
-          "s3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersion3171a9e1-build.zip"
+          "s3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersion281f2583-build.zip"
         },
         "getAudioHistory": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
@@ -42,6 +44,22 @@
         "deleteAudioHistory": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
           "s3Key": "amplify-builds/deleteAudioHistory-4f455a544f6f516d704d-build.zip"
+        },
+        "tts3c1965c7PostConfirmation": {
+          "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
+          "s3Key": "amplify-builds/tts3c1965c7PostConfirmation-6b363167707961486676-build.zip"
+        },
+        "initializeUserTable": {
+          "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
+          "s3Key": "amplify-builds/initializeUserTable-324b35464f396c624547-build.zip"
+        },
+        "getUserData": {
+          "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
+          "s3Key": "amplify-builds/getUserData-376e436f734c51484c6c-build.zip"
+        },
+        "ResetUserQuota": {
+          "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
+          "s3Key": "amplify-builds/ResetUserQuota-3448674a75455a715736-build.zip"
         }
       },
       "api": {

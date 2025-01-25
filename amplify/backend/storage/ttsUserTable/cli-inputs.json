@@ -1,0 +1,10 @@
+{
+  "resourceName": "ttsUserTable",
+  "tableName": "ttsUserTable",
+  "partitionKey": {
+    "fieldName": "userId",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
