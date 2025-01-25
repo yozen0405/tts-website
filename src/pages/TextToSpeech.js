@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './TextToSpeech.css';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -9,7 +9,8 @@ import {
 	setSpeed,
 	setRecord,
 	setIsLoading,
-	deleteAudioRecord
+	deleteAudioRecord,
+	setError
 } from '../redux/slices/paramSlice';
 import {
 	resetState
@@ -18,6 +19,7 @@ import VoiceDropdown from '../components/VoiceDropdown';
 import Loader from '../components/Loader';
 import AudioRecordItem from '../components/AudioRecordItem';
 import { uploadAudio } from '../api/apiActions';
+import { toast } from 'react-toastify';
 
 export default function TextToSpeech() {
 	const dispatch = useDispatch();
@@ -31,6 +33,7 @@ export default function TextToSpeech() {
 		pitch,
 		record,
     	isLoading,
+		error
 	} = useSelector((state) => state.voices);
 
 	const formatToAzureValue = (value) => {
@@ -53,10 +56,29 @@ export default function TextToSpeech() {
 			dispatch(resetState());
 		} catch (error) {
 			console.error('Error generating audio:', error);
+			dispatch(setError(error.errorCode))
 		} finally {
 			dispatch(setIsLoading(false));
 		}
 	};
+
+	const showErrorToast = (error) => {
+		if (error === 'INSUFFICIENT_QUOTA') {
+			toast.error('您的額度已用完，請升級套餐');
+		} else if (error === 'INTERNAL_SERVER_ERROR') {
+			toast.error('系統出現問題，請稍後再試');
+		} else {
+			toast.error('發生未知錯誤');
+		}
+	};
+
+	// 當 error 發生時顯示 toast
+	useEffect(() => {
+		if (error) {
+			showErrorToast(error);
+			dispatch(setError(null));
+		}
+	}, [error, dispatch]);
 
 	const handleDelete = async (createdAt) => {
 		await dispatch(deleteAudioRecord(createdAt));

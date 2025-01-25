@@ -59,6 +59,6 @@ export const deleteAudioRecord = (createdAt) => async (dispatch) => {
       await deleteAudioHistory(createdAt);
       dispatch(setRecord(null));
   } catch (error) {
-      dispatch(setError(error.message));
+      dispatch(setError(error.errorCode));
   }
 };

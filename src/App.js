@@ -14,6 +14,8 @@ import './App.css';
 import History from './pages/History'
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from 'aws-amplify/auth';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 Amplify.configure(config);
 
@@ -52,6 +54,7 @@ export default function App() {
                 <Route path="/text-to-speech" element={<TextToSpeech />} />
                 <Route path="/history" element={<History />} />
               </Routes>
+              <ToastContainer position="top-center"/>
             </Router>
           </Provider>
         )}

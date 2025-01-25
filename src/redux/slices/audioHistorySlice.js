@@ -4,6 +4,7 @@ import { getAudioHistory, deleteAudioHistory } from '../../api/apiActions';
 const initialState = {
     audioRecords: [],
     isLoading: false,
+    isDeleting: false,
     error: null,
     hasFetched: false, 
 };
@@ -25,6 +26,9 @@ const audioHistorySlice = createSlice({
             state.isLoading = false;
             state.error = action.payload;
         },
+        setIsDeleting(state, action) {
+            state.isDeleting = action.payload;
+        },
         deleteRecord(state, action) {
             state.audioRecords = state.audioRecords.filter(
                 (record) => record.createdAt !== action.payload
@@ -36,7 +40,7 @@ const audioHistorySlice = createSlice({
     },
 });
 
-export const { init, setAudioRecords, setError, resetState, deleteRecord } = audioHistorySlice.actions;
+export const { init, setAudioRecords, setError, setIsDeleting, resetState, deleteRecord } = audioHistorySlice.actions;
 
 export const fetchAudioHistory = () => async (dispatch, getState) => {
     const { hasFetched } = getState().audioHistory;
@@ -54,12 +58,21 @@ export const fetchAudioHistory = () => async (dispatch, getState) => {
     }
 };
 
-export const deleteAudioRecord = (createdAt) => async (dispatch) => {
+export const deleteAudioRecord = (createdAt) => async (dispatch, getState) => {
+    const { isDeleting } = getState().audioHistory;
+
+    if (isDeleting) {
+        return;
+    }
+
     try {
+        dispatch(setIsDeleting(true));
         await deleteAudioHistory(createdAt);
         dispatch(deleteRecord(createdAt));
     } catch (error) {
         dispatch(setError(error.message));
+    } finally {
+        dispatch(setIsDeleting(false));
     }
 };
 
