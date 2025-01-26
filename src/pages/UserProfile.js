@@ -1,57 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { getUserData } from "../api/apiActions"; 
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUserData, getCardClass, translatePlan } from "../redux/slices/userSlice";
 import Loader from "../components/Loader";
-import "./UserProfile.css"; 
+import "./UserProfile.css";
 
 export default function UserProfile() {
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    const getCardClass = (plan) => {
-        switch (plan) {
-            case "free":
-                return "user-profile-card free";
-            case "premium":
-                return "user-profile-card premium";
-            case "enterprise":
-                return "user-profile-card enterprise";
-            default:
-                return "user-profile-card default";
-        }
-    };
-
-    const translatePlan = (plan) => {
-        switch (plan) {
-            case "free":
-                return "免費方案";
-            case "premium":
-                return "高級方案";
-            case "enterprise":
-                return "企業方案";
-            default:
-                return "未知方案";
-        }
-    };
+    const dispatch = useDispatch();
+    const { userData, isLoading } = useSelector((state) => state.profile);
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                setLoading(true);
-                const userDetails = await getUserData();
-                setUserData(userDetails);
-            } catch (err) {
-                console.error("Error fetching user data:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, []);
+        dispatch(fetchUserData());
+    }, [dispatch]);
 
     return (
         <div className="user-profile-container">
-            {loading ? (
+            {isLoading ? (
                 <Loader />
             ) : (
                 <>
@@ -72,7 +35,7 @@ export default function UserProfile() {
                                 <strong>電子郵件：</strong> {userData?.email || "N/A"}
                             </li>
                             <li>
-                                <strong>使用配額：</strong> {userData?.quotaUsed || 0}/{userData?.quotaLimit || 0}
+                                <strong>使用配額：</strong> {userData?.quotaUsed || 0}/{userData?.quotaLimit || 0} 字
                             </li>
                             <li>
                                 <strong>每次字數上限：</strong> {userData?.charLimit || "N/A"} 字

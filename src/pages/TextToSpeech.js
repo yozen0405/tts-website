@@ -13,8 +13,11 @@ import {
 	setError
 } from '../redux/slices/paramSlice';
 import {
-	resetState
+	resetHistoryState
 } from '../redux/slices/audioHistorySlice';
+import {
+	resetUserState
+} from '../redux/slices/userSlice';
 import VoiceDropdown from '../components/VoiceDropdown';
 import Loader from '../components/Loader';
 import AudioRecordItem from '../components/AudioRecordItem';
@@ -53,7 +56,8 @@ export default function TextToSpeech() {
 
 			const record = await uploadAudio(text, selectedLanguage.id, selectedVoice.id, formattedSpeed, formattedPitch);
 			dispatch(setRecord(record));
-			dispatch(resetState());
+			dispatch(resetHistoryState());
+			dispatch(resetUserState());
 		} catch (error) {
 			const errorBody = JSON.parse(error.response.body); // 從 response 解析 JSON
 			console.log("Parsed Error:", errorBody);
@@ -87,6 +91,7 @@ export default function TextToSpeech() {
 
 	const handleDelete = async (createdAt) => {
 		await dispatch(deleteAudioRecord(createdAt));
+		dispatch(resetHistoryState());
 	};
 
 	return (

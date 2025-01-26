@@ -34,13 +34,13 @@ const audioHistorySlice = createSlice({
                 (record) => record.createdAt !== action.payload
             );
         },
-        resetState() {
+        resetHistoryState() {
             return initialState;
         },
     },
 });
 
-export const { init, setAudioRecords, setError, setIsDeleting, resetState, deleteRecord } = audioHistorySlice.actions;
+export const { init, setAudioRecords, setError, setIsDeleting, resetHistoryState, deleteRecord } = audioHistorySlice.actions;
 
 export const fetchAudioHistory = () => async (dispatch, getState) => {
     const { hasFetched } = getState().audioHistory;
