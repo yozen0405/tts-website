@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './TextToSpeech.css';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -22,7 +22,6 @@ import VoiceDropdown from '../components/VoiceDropdown';
 import Loader from '../components/Loader';
 import AudioRecordItem from '../components/AudioRecordItem';
 import { uploadAudio } from '../api/apiActions';
-import { toast } from 'react-toastify';
 
 export default function TextToSpeech() {
 	const dispatch = useDispatch();
@@ -35,7 +34,7 @@ export default function TextToSpeech() {
 		speed,
 		pitch,
 		record,
-    	isLoading,
+		isLoading,
 		error
 	} = useSelector((state) => state.voices);
 
@@ -45,10 +44,22 @@ export default function TextToSpeech() {
 	};
 
 	const handleGenerateAudio = async () => {
-		if (!text || !selectedVoice || isLoading) return;
+		if (!text) {
+			dispatch(setError({
+				errorCode: "TEXT_EMPTY",
+			}));
+			return;
+		}
+		if (isLoading) {
+			dispatch(setError({
+				errorCode: "IS_LOADING",
+			}));
+			return;
+		}
 
 		dispatch(setIsLoading(true));
-    	dispatch(setRecord(null));
+		dispatch(setRecord(null));
+		dispatch(setError(null));
 
 		try {
 			const formattedSpeed = formatToAzureValue(speed);
@@ -59,8 +70,8 @@ export default function TextToSpeech() {
 			dispatch(resetHistoryState());
 			dispatch(resetUserState());
 		} catch (error) {
-			const errorBody = JSON.parse(error.response.body); // 從 response 解析 JSON
-			console.log("Parsed Error:", errorBody);
+			const errorBody = JSON.parse(error.response.body);
+			// console.log("Parsed Error:", errorBody);
 			dispatch(setError(errorBody));
 			// console.error('Error generating audio:', body);
 		} finally {
@@ -68,26 +79,23 @@ export default function TextToSpeech() {
 		}
 	};
 
-	const showErrorToast = (error) => {
-		if (error.errorCode === 'INSUFFICIENT_QUOTA') {
-			toast.warning(`您的額度只剩下 ${error.details.quotaLimit - error.details.quotaUsed} 個字，請升級`);
-		} else if (error.errorCode === 'CHAR_LIMIT_EXCEEDED') {
-			toast.warning(`您最多只能打 ${error.details.charLimit} 個字（目前 ${error.details.charCount}個字）`);
-		} else if (error.errorCode === 'INTERNAL_SERVER_ERROR') {
-			toast.error('系統出現問題，請稍後再試，並聯絡主管');
+	const renderErrorMessage = () => {
+		if (!error) return null;
+
+		if (error.errorCode === "INSUFFICIENT_QUOTA") {
+			return `您的額度只剩下 ${error.details.quotaLimit - error.details.quotaUsed} 個字，請升級。`;
+		} else if (error.errorCode === "CHAR_LIMIT_EXCEEDED") {
+			return `您最多只能打 ${error.details.charLimit} 個字（目前 ${error.details.charCount} 個字）。`;
+		} else if (error.errorCode === "INTERNAL_SERVER_ERROR") {
+			return "系統出現問題，請稍後再試，並聯絡主管。";
+		} else if (error.errorCode === "IS_LOADING") {
+			return "請稍候，正在生成語音。";
+		} else if (error.errorCode === "TEXT_EMPTY") {
+			return "輸入文字不得為空，請輸入內容。";
 		} else {
-			toast.error('發生未知錯誤，請聯絡主管');
+			return "發生未知錯誤，請聯絡主管。";
 		}
 	};
-
-	// 當 error 發生時顯示 toast
-	useEffect(() => {
-		if (error) {
-			console.log(error);
-			showErrorToast(error);
-			dispatch(setError(null));
-		}
-	}, [error, dispatch]);
 
 	const handleDelete = async (createdAt) => {
 		await dispatch(deleteAudioRecord(createdAt));
@@ -105,6 +113,7 @@ export default function TextToSpeech() {
 					onChange={(e) => dispatch(setText(e.target.value))}
 					placeholder="輸入想轉成語音的文字"
 				/>
+				{error && <p className="error-message">{renderErrorMessage()}</p>}
 			</div>
 
 			<div className="text-to-speech-btn-section">
@@ -160,8 +169,8 @@ export default function TextToSpeech() {
 			{record && (
 				<div className="text-to-speech-audio-area">
 					<h3>播放生成的語音</h3>
-					<AudioRecordItem 
-						record={record} 
+					<AudioRecordItem
+						record={record}
 						onDelete={handleDelete}
 					/>
 				</div>

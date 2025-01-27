@@ -11,7 +11,8 @@
     { "id": "zh-CN-YunxiNeural", "value": "男一", "languageCode": "zh-CN" },
     { "id": "zh-CN-YunyeNeural", "value": "男二", "languageCode": "zh-CN" },
     { "id": "zh-CN-XiaoxiaoMultilingualNeural", "value": "女一", "languageCode": "zh-CN" },
-    { "id": "zh-CN-XiaochenMultilingualNeural", "value": "女二", "languageCode": "zh-CN" },
+    { "id": "zh-CN-XiaoyouNeural", "value": "女二", "languageCode": "zh-CN" },
+    { "id": "zh-CN-XiaoshuangNeural", "value": "女三", "languageCode": "zh-CN" },
     { "id": "en-US-EmmaMultilingualNeural", "value": "女", "languageCode": "en-US" },
     { "id": "en-US-BrianMultilingualNeural", "value": "男", "languageCode": "en-US" }
   ]
