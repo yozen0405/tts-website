@@ -60,6 +60,10 @@
         "ResetUserQuota": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
           "s3Key": "amplify-builds/ResetUserQuota-3448674a75455a715736-build.zip"
+        },
+        "upgradettsPlan": {
+          "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
+          "s3Key": "amplify-builds/upgradettsPlan-3143664f544e7868476c-build.zip"
         }
       },
       "api": {

@@ -280,6 +280,29 @@
       "providerPlugin": "awscloudformation",
       "service": "LambdaLayer"
     },
+    "upgradettsPlan": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "StreamArn"
+          ],
+          "category": "storage",
+          "resourceName": "ttsUserTable"
+        },
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "ttsaudioUtils"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "uploadttsAudio": {
       "build": true,
       "dependsOn": [
@@ -453,6 +476,22 @@
         {
           "category": "function",
           "resourceName": "ttsaudioUtils"
+        }
+      ]
+    },
+    "AMPLIFY_function_upgradettsPlan_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "upgradettsPlan"
+        }
+      ]
+    },
+    "AMPLIFY_function_upgradettsPlan_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "upgradettsPlan"
         }
       ]
     },

@@ -71,6 +71,13 @@ export type AmplifyDependentResourcesAttributes = {
     "ttsaudioUtils": {
       "Arn": "string"
     },
+    "upgradettsPlan": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "uploadttsAudio": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
