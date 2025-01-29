@@ -16,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@aws-amplify/ui-react/styles.css';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
+import { resetVoiceState } from './redux/slices/paramSlice';
 
 I18n.setLanguage('zh-TW');
 I18n.putVocabularies({ 'zh-TW': zhDict });
@@ -33,6 +34,7 @@ export default function MainApp() {
             }
             dispatch(resetHistoryState());
             dispatch(resetUserState());
+            dispatch(resetVoiceState());
         };
 
         Hub.listen('auth', updateAuthStatus);

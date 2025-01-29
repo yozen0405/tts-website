@@ -24,7 +24,7 @@
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
-    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientRefreshTokenValidity": "600",
     "userpoolClientWriteAttributes": [
       "email"
     ],
@@ -32,7 +32,7 @@
       "email"
     ],
     "userpoolClientLambdaRole": "tts3c13c1965c7_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": true,
+    "userpoolClientSetAttributes": false,
     "sharedId": "3c1965c7",
     "resourceName": "tts3c1965c7",
     "authSelections": "identityPoolAndUserPool",

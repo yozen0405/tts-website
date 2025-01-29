@@ -8,15 +8,15 @@ import {
 	setPitch,
 	setSpeed,
 	setRecord,
-	setIsLoading,
+	setIsGenerating,
 	deleteAudioRecord,
-	setError
+	setError,
+	fetchUserData
 } from '../redux/slices/paramSlice';
 import {
 	resetHistoryState
 } from '../redux/slices/audioHistorySlice';
 import {
-	fetchUserData,
 	resetUserState
 } from '../redux/slices/userSlice';
 import VoiceDropdown from '../components/VoiceDropdown';
@@ -33,11 +33,6 @@ export default function TextToSpeech() {
 	  }, [dispatch]);
 	
 	const {
-		userData,
-		isLoading: userLoading
-	} = useSelector((state) => state.profile);
-
-	const {
 		languages,
 		voices,
 		selectedLanguage,
@@ -46,8 +41,10 @@ export default function TextToSpeech() {
 		speed,
 		pitch,
 		record,
+		isGenerating,
+		error,
 		isLoading,
-		error
+		charLimit
 	} = useSelector((state) => state.voices);
 
 	const formatToAzureValue = (value) => {
@@ -62,14 +59,14 @@ export default function TextToSpeech() {
 			}));
 			return;
 		}
-		if (isLoading) {
+		if (isGenerating) {
 			dispatch(setError({
 				errorCode: "IS_LOADING",
 			}));
 			return;
 		}
 
-		dispatch(setIsLoading(true));
+		dispatch(setIsGenerating(true));
 		dispatch(setRecord(null));
 		dispatch(setError(null));
 
@@ -87,7 +84,7 @@ export default function TextToSpeech() {
 			dispatch(setError(errorBody));
 			// console.error('Error generating audio:', body);
 		} finally {
-			dispatch(setIsLoading(false));
+			dispatch(setIsGenerating(false));
 		}
 	};
 
@@ -114,16 +111,17 @@ export default function TextToSpeech() {
 		dispatch(resetHistoryState());
 	};
 
-	if (userLoading) {
+	if (isLoading) {
 		return (
-		  <div className="tts-loader">
-			<ClipLoader size={80} color={"#28b571"} />
-			<p className="loading-text">載入資料中，請稍候...</p>
-		  </div>
+			<div className="text-to-speech-container">
+				<h2>輸入文字轉語音</h2>
+				<div className="tts-loader">
+					<ClipLoader size={80} color={"#28b571"} />
+					<p className="loading-text">載入資料中，請稍候...</p>
+				</div>
+			</div>
 		);
 	}
-
-	const charLimit = userData?.charLimit || 0;
 
 	return (
 		<div className="text-to-speech-container">
@@ -200,9 +198,9 @@ export default function TextToSpeech() {
 				<button
 					className="text-to-speech-button"
 					onClick={handleGenerateAudio}
-					disabled={!selectedVoice || isLoading}
+					disabled={!selectedVoice || isGenerating}
 				>
-					{isLoading ? <Loader color="white" size="8px" /> : '生成語音'}
+					{isGenerating ? <Loader color="white" size="8px" /> : '生成語音'}
 				</button>
 			</div>
 
