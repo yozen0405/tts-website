@@ -1,7 +1,7 @@
 /* VoiceDropdown.css */
 .dropdown {
   position: relative;
-  width: 12rem;
+  min-width: 12rem;
 }
 
 .dropdown-header {

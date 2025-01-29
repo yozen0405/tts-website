@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion281f2583": {
+    "LambdaLayerVersionb0f5de09": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -51,13 +51,87 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivate281f2583": {
+    "LambdaLayerPermissionPrivateb0f5de09": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion281f2583"
+          "Ref": "LambdaLayerVersionb0f5de09"
         },
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion0c5bd935": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs16.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersion0c5bd935-build.zip"
+        },
+        "Description": "Updated layer version 2025-01-29T02:37:32.694Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "ttsaudioUtils-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate0c5bd935": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:ap-northeast-1:605134459632:layer:ttsaudioUtils-dev:3",
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion281f2583": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "nodejs16.x"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersion281f2583-build.zip"
+        },
+        "Description": "Updated layer version 2025-01-25T07:57:54.797Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "ttsaudioUtils-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate281f2583": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:ap-northeast-1:605134459632:layer:ttsaudioUtils-dev:2",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -104,7 +178,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion281f2583"
+        "Ref": "LambdaLayerVersionb0f5de09"
       }
     }
   }

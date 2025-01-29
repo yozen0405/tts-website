@@ -71,3 +71,18 @@
 .user-profile-info-list strong {
     font-weight: bold;
 }
+
+.user-profile-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    height: 200px;
+}
+
+.loading-text {
+    margin-top: 10px;
+    font-size: 1.3em;
+    color: #282828;
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './TextToSpeech.css';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -16,15 +16,27 @@ import {
 	resetHistoryState
 } from '../redux/slices/audioHistorySlice';
 import {
+	fetchUserData,
 	resetUserState
 } from '../redux/slices/userSlice';
 import VoiceDropdown from '../components/VoiceDropdown';
 import Loader from '../components/Loader';
 import AudioRecordItem from '../components/AudioRecordItem';
 import { uploadAudio } from '../api/apiActions';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function TextToSpeech() {
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(fetchUserData());
+	  }, [dispatch]);
+	
+	const {
+		userData,
+		isLoading: userLoading
+	} = useSelector((state) => state.profile);
+
 	const {
 		languages,
 		voices,
@@ -102,6 +114,17 @@ export default function TextToSpeech() {
 		dispatch(resetHistoryState());
 	};
 
+	if (userLoading) {
+		return (
+		  <div className="tts-loader">
+			<ClipLoader size={80} color={"#28b571"} />
+			<p className="loading-text">載入資料中，請稍候...</p>
+		  </div>
+		);
+	}
+
+	const charLimit = userData?.charLimit || 0;
+
 	return (
 		<div className="text-to-speech-container">
 			<h2>輸入文字轉語音</h2>
@@ -110,10 +133,27 @@ export default function TextToSpeech() {
 				<textarea
 					className="text-to-speech-textarea"
 					value={text}
-					onChange={(e) => dispatch(setText(e.target.value))}
+					onChange={(e) => {
+						dispatch(setError(null));
+						dispatch(setText(e.target.value));
+					}}
 					placeholder="輸入想轉成語音的文字"
 				/>
-				{error && <p className="error-message">{renderErrorMessage()}</p>}
+				<div className="textarea-downrow">
+					{error ? (
+						<p className="error-message">{renderErrorMessage()}</p>
+					) : (
+						<div style={{ width: '50%' }} />
+					)}
+					<p className="char-counter">
+						<span
+							className={text.length > charLimit ? "exceed-limit" : ""}
+						>
+						{text.length}
+						</span>{" "}
+						/ {charLimit} 字
+					</p>
+				</div>
 			</div>
 
 			<div className="text-to-speech-btn-section">

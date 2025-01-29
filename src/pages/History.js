@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAudioHistory, deleteAudioRecord } from '../redux/slices/audioHistorySlice';
 import './History.css';
-import Loader from '../components/Loader';
+import { ClipLoader } from "react-spinners";
 import AudioRecordItem from '../components/AudioRecordItem'; 
 
 export default function History() {
@@ -21,7 +21,10 @@ export default function History() {
         <div className="history-container">
             <h2>歷史紀錄</h2>
             {isLoading ? (
-                <Loader />
+                <div className="history-loader">
+                    <ClipLoader size={80} color={"#28b571"} />
+                    <p className="loading-text">載入資料中，請稍候...</p>
+                </div>
             ) : audioRecords.length > 0 ? (
                 audioRecords.map((record) => (
                     <AudioRecordItem

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserData, getCardClass, translatePlan } from "../redux/slices/userSlice";
-import Loader from "../components/Loader";
+import { ClipLoader } from "react-spinners";
 import "./UserProfile.css";
 
 export default function UserProfile() {
@@ -15,7 +15,10 @@ export default function UserProfile() {
     return (
         <div className="user-profile-container">
             {isLoading ? (
-                <Loader />
+                <div className="user-profile-loader">
+                    <ClipLoader size={80} color={"#28b571"} />
+                    <p className="loading-text">載入資料中，請稍候...</p>
+                </div>
             ) : (
                 <>
                     <div className={getCardClass(userData?.plan)}>

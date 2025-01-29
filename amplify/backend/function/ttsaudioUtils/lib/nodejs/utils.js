@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
-const expireTime = 10 * 60;
+const expireTime = 3 * 60 * 60; // 3 小時（秒）
 
 /**
  * 生成 S3 預簽名 URL
@@ -35,7 +35,7 @@ const usagePlans = [
 
 /**
  * 獲取用戶的升級使用計劃
- * @param {Object} param 包含用戶級別的參數 (例如 { level: 'premium' })
+ * @param {Object} param 包含用戶級別的參數 
  * @returns {Object} 包含計劃名稱 (plan) 和對應的配額 (quota)
  */
 const getUsagePlan = (param) => {

@@ -25,7 +25,7 @@
       "function": {
         "uploadttsAudio": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
-          "s3Key": "amplify-builds/uploadttsAudio-36436674597532666235-build.zip",
+          "s3Key": "amplify-builds/uploadttsAudio-3647755a624247553035-build.zip",
           "azureRegion": "japaneast",
           "azureSubscriptionKey": "BO4j30UEdAIolILbEHJVemdIHdlIh1YOtEsza6bFmBqAysKnDC7uJQQJ99AKACi0881XJ3w3AAAYACOGL1J5"
         },
@@ -35,11 +35,11 @@
         },
         "ttsaudioUtils": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
-          "s3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersion281f2583-build.zip"
+          "s3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersionb0f5de09-build.zip"
         },
         "getAudioHistory": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
-          "s3Key": "amplify-builds/getAudioHistory-6a794445366770456d68-build.zip"
+          "s3Key": "amplify-builds/getAudioHistory-6834616c79307347644f-build.zip"
         },
         "deleteAudioHistory": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
