@@ -11,7 +11,8 @@ import {
 	setIsGenerating,
 	deleteAudioRecord,
 	setError,
-	fetchUserData
+	fetchUserData,
+	resetVoiceState
 } from '../redux/slices/paramSlice';
 import {
 	resetHistoryState
@@ -24,6 +25,7 @@ import Loader from '../components/Loader';
 import AudioRecordItem from '../components/AudioRecordItem';
 import { uploadAudio } from '../api/apiActions';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { toast } from 'react-toastify';
 
 export default function TextToSpeech() {
 	const dispatch = useDispatch();
@@ -110,6 +112,12 @@ export default function TextToSpeech() {
 		await dispatch(deleteAudioRecord(createdAt));
 		dispatch(resetHistoryState());
 	};
+
+	const refreshAudioUrl = () => {
+		toast.info("畫面閒置太久，重制頁面中...", { autoClose: 3000 })
+		dispatch(resetVoiceState());
+		dispatch(fetchUserData());
+	}
 
 	if (isLoading) {
 		return (
@@ -210,6 +218,7 @@ export default function TextToSpeech() {
 					<AudioRecordItem
 						record={record}
 						onDelete={handleDelete}
+						refreshUrl={refreshAudioUrl}
 					/>
 				</div>
 			)}

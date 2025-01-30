@@ -3,71 +3,85 @@
   justify-content: space-between;
   flex-direction: column;
   padding: 1rem;
-  margin-bottom: 1rem;
-  gap: 2em;
   background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: .1rem solid #34874c;
-  border-left: 1rem solid #34874c;
+  cursor: pointer;
 }
 
-.audio-record-title {
+.audio-record-item:first-child {
+  border-top: .1rem solid rgba(0, 0, 0, 0.1);
+}
+
+.audio-record-item {
+  border-bottom: .1rem solid rgba(0, 0, 0, 0.1);
+}
+
+.audio-record-item:hover {
+  background-color: #f4f4f4;
+}
+
+.audio-record-item.expanded .audio-header {
+  margin-bottom: 1rem;
+}
+
+.audio-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.2rem 0;
+}
+
+.audio-date {
   font-size: 1.1rem;
-}
-
-.audio-first-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  font-weight: 500;
+  margin: 0;
+  color: rgb(113, 113, 113);
 }
 
 .audio-record-item audio {
   width: 100%;
 }
 
-.audio-record-actions {
-  display: flex;
-
+.rhap_container {
+  background-color: transparent;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0);
+  padding: 0 1vw;
+}
+.rhap_main-controls-button {
+  color: #2c2c2c;
 }
 
-.audio-record-actions button {
-  font-size: 2rem;
-  color: #34874c;
+.rhap_download-progress {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.rhap_progress-filled {
+  background-color: #383838;
+}
+
+.rhap_progress-indicator {
+  background-color: #383838;
+  width: 10px;
+  height: 10px;
+  top: -2.4px;
+}
+
+.rhap_play-pause-button {
+  width: 35px;
+  height: 35px;
+  font-size: 35px;
+}
+
+.custom-audio-button {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #2476d4;
   background-color: transparent;
   text-decoration: none;
   border: none;
   cursor: pointer;
   display: flex;
   justify-content: center;
-}
-
-.rhap_container {
-  background-color: transparent;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0);
-  padding: 0 2vw;
-}
-.rhap_main-controls-button {
-  color: #34874c;
-}
-
-.rhap_download-progress {
-  background-color: #accdb5;
-}
-
-.rhap_progress-filled {
-  background-color: #367f49;
-}
-
-.rhap_progress-indicator {
-  background-color: #34874c;
-}
-
-.rhap_play-pause-button {
-  width: 50px;
-  height: 50px;
-  font-size: 50px;
 }
 
 .rhap_progress-section {
@@ -87,7 +101,12 @@
 .rhap_progress-section > .rhap_time {
   grid-row: 2;
   width: 100%;
-  color: rgb(16, 125, 41);
+  font-weight: 550;
+  color: rgb(132, 132, 132);
+}
+
+.rhap_current-time {
+  text-align: start;
 }
 
 .rhap_total-time {

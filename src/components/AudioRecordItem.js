@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faTrash, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 import { downloadAudio } from '../api/apiActions';
 import download from 'downloadjs';
 import ReactH5AudioPlayer from 'react-h5-audio-player'; 
@@ -8,12 +8,16 @@ import 'react-h5-audio-player/lib/styles.css';
 import './AudioRecordItem.css';
 import ConfirmationModal from './ConfirmationModal';
 import { RotatingLines } from 'react-loader-spinner';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAudioHistory, resetHistoryState } from '../redux/slices/audioHistorySlice';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-export default function AudioRecordItem({ record, onDelete }) {
-    const dispatch = useDispatch();
+export default function AudioRecordItem({ 
+    record, 
+    onDelete, 
+    expanded = true, 
+    toggleExpansion = null,
+    refreshUrl
+}) {
     const { isDeleting } = useSelector((state) => state.audioHistory);
 
     const MAX_CHARS = process.env.REACT_APP_MAX_AUDIO_TEXT_CHARS || 50;
@@ -25,7 +29,7 @@ export default function AudioRecordItem({ record, onDelete }) {
     const handleDownload = async () => {
         setIsDownloading(true);
         try {
-            const base64Audio = await downloadAudio(record.createdAt); // 返回 Base64 音檔數據
+            const base64Audio = await downloadAudio(record.createdAt);
 
             // 解碼 Base64 為二進制數據
             const binaryData = atob(base64Audio);
@@ -43,6 +47,12 @@ export default function AudioRecordItem({ record, onDelete }) {
     const truncatedDescription = record.description.length > MAX_CHARS
         ? `${record.description.slice(0, MAX_CHARS)}...`
         : record.description;
+
+    const formattedDate = new Date(record.createdAt).toLocaleDateString('zh-TW', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    });
 
     const handleDelete = () => {
         if (isDeleting && isCurrentItemDeleting) {
@@ -77,25 +87,19 @@ export default function AudioRecordItem({ record, onDelete }) {
                 return false;
             }
 
-            const now = Math.floor(Date.now() / 1000); // 取得當前時間（秒）
-            return now > parseInt(expiresTimestamp, 10); // 若當前時間大於 `Expires`，則過期
+            const now = Math.floor(Date.now() / 1000); 
+            return now > parseInt(expiresTimestamp, 10); 
         } catch (error) {
             toast.error('我們系統出了點問題，請聯絡主管');
             return false;
         }
     };
 
-    const refreshAudioUrl = async () => {
-        toast.info("畫面刷新中，請稍候...", { autoClose: 3000 });
-        dispatch(resetHistoryState());
-        await dispatch(fetchAudioHistory());
-    }
-
     useEffect(() => {
         const handleFocus = () => {
             const expired = checkUrlExpired(record.url);
             if (expired) {
-                refreshAudioUrl();
+                refreshUrl();
             }
         };
     
@@ -106,53 +110,73 @@ export default function AudioRecordItem({ record, onDelete }) {
         };
     }, [record.url]);
 
+    const customDownloadButton = (
+        <button 
+            onClick={handleDownload} 
+            className="rhap_button-clear custom-audio-button"
+            disabled={isDownloading}
+        >
+            {isDownloading ? (
+                <RotatingLines
+                    strokeColor="#2476d4"
+                    animationDuration="0.75"
+                    width="30"
+                    visible={true}
+                />
+            ) : (
+                <FontAwesomeIcon icon={faDownload} />
+            )}
+        </button>
+    );
+
+    const customDeleteButton = (
+        <button 
+            onClick={handleDelete} 
+            className="rhap_button-clear custom-audio-button delete-button"
+        >
+            {isCurrentItemDeleting ? (
+                <RotatingLines
+                    strokeColor="#2476d4"
+                    animationDuration="0.75"
+                    width="30"
+                    visible={true}
+                />
+            ) : (
+                <FontAwesomeIcon icon={faTrash} />
+            )}
+        </button>
+    );
+
+    const handleItemClick = () => {
+        if (typeof toggleExpansion === 'function') {
+          toggleExpansion(record.createdAt);
+        }
+    };
+
     return (
-        <div className="audio-record-item">
-            <div className='audio-first-row'>
-                <p className="audio-record-title">{truncatedDescription}</p>
-                <div className="audio-record-actions">
-                    <button onClick={handleDownload} disabled={isDownloading}>
-                        {isDownloading ? (
-                            <RotatingLines
-                                strokeColor="#34874c"
-                                animationDuration="0.75"
-                                width="35"
-                                visible={true}
-                            />
-                        ) : (
-                            <FontAwesomeIcon icon={faDownload} />
-                        )}
-                    </button>
-                    <button onClick={handleDelete} className="delete-button">
-                        {isCurrentItemDeleting ? (
-                            <RotatingLines
-                                strokeColor="#34874c"
-                                animationDuration="0.75"
-                                width="35"
-                                visible={true}
-                            />
-                        ) : (
-                            <FontAwesomeIcon icon={faTrash} />
-                        )}
-                    </button>
-                </div>
-
+        <div className={`audio-record-item ${expanded ? 'expanded' : ''}`} onClick={handleItemClick}>
+            <div className='audio-header'>
+                <p className="audio-title">{truncatedDescription}</p>
+                <p className="audio-date">{formattedDate}</p>
             </div>
-
-            <ReactH5AudioPlayer
-                src={record.url}
-                autoPlay={false}
-                showJumpControls={false}
-                showDownloadProgress={true}
-                customAdditionalControls={[]}  
-                customVolumeControls={[]} 
-                onCanPlay={() => {
-                    if (checkUrlExpired(record.url)) {
-                        refreshAudioUrl();
-                    }
-                }}
-                onError={refreshAudioUrl}
-            />
+            
+            {expanded && (
+                <ReactH5AudioPlayer
+                    src={record.url}
+                    autoPlay={false}
+                    showJumpControls={false}
+                    showDownloadProgress={true}
+                    customAdditionalControls={[customDownloadButton]}
+                    customVolumeControls={[customDeleteButton]}
+                    onCanPlay={() => {
+                        if (checkUrlExpired(record.url)) {
+                            refreshUrl();
+                        }
+                    }}
+                    onError={refreshUrl}
+                    customIcons={{ play: <FontAwesomeIcon icon={faPlay} />, pause: <FontAwesomeIcon icon={faPause} /> }}
+                />
+            )}
 
             <ConfirmationModal
                 isVisible={showConfirmModal}

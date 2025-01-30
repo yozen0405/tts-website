@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getAudioHistory, deleteAudioHistory } from '../../api/apiActions';
+import { toast } from 'react-toastify';
 
 const initialState = {
     audioRecords: [],
@@ -7,6 +8,7 @@ const initialState = {
     isDeleting: false,
     error: null,
     hasFetched: false, 
+    expandedRecord: null,
 };
 
 const audioHistorySlice = createSlice({
@@ -17,7 +19,6 @@ const audioHistorySlice = createSlice({
             state.isLoading = action.payload;
         },
         setAudioRecords(state, action) {
-            state.isLoading = false;
             state.audioRecords = action.payload;
             state.hasFetched = true; 
         },
@@ -33,13 +34,16 @@ const audioHistorySlice = createSlice({
                 (record) => record.createdAt !== action.payload
             );
         },
+        setExpandedRecord(state, action) {
+            state.expandedRecord = action.payload;
+        },
         resetHistoryState() {
             return initialState;
         },
     },
 });
 
-export const { setIsLoading, setAudioRecords, setError, setIsDeleting, resetHistoryState, deleteRecord } = audioHistorySlice.actions;
+export const { setIsLoading, setAudioRecords, setError, setIsDeleting, setExpandedRecord, resetHistoryState, deleteRecord } = audioHistorySlice.actions;
 
 export const fetchAudioHistory = () => async (dispatch, getState) => {
     const { hasFetched } = getState().audioHistory;
@@ -74,6 +78,7 @@ export const deleteAudioRecord = (createdAt) => async (dispatch, getState) => {
     } finally {
         dispatch(setIsDeleting(false));
     }
+    toast.info("刪除成功！", { autoClose: 2000 });
 };
 
 export default audioHistorySlice.reducer;

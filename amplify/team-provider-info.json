@@ -35,7 +35,7 @@
         },
         "ttsaudioUtils": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",
-          "s3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersion3a77d477-build.zip"
+          "s3Key": "amplify-builds/ttsaudioUtils-LambdaLayerVersion8b944b03-build.zip"
         },
         "getAudioHistory": {
           "deploymentBucketName": "amplify-tts-dev-9f738-deployment",

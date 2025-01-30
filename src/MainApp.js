@@ -17,6 +17,7 @@ import '@aws-amplify/ui-react/styles.css';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
 import { resetVoiceState } from './redux/slices/paramSlice';
+import ScrollRestoration from './components/ScrollRestoration';
 
 I18n.setLanguage('zh-TW');
 I18n.putVocabularies({ 'zh-TW': zhDict });
@@ -50,6 +51,7 @@ export default function MainApp() {
                 {({ signOut, user }) => (
                     <Router>
                         <Navbar user={user} onSignOut={signOut} />
+                        <ScrollRestoration />
                         <Routes>
                             <Route path="/" element={<Home user={user} />} />
                             <Route path="/text-to-speech" element={<TextToSpeech />} />
