@@ -83,15 +83,11 @@ export default function AudioRecordItem({ record, onDelete }) {
         }
     };
 
-    const handlePlayAudio = async () => {
-        if (checkUrlExpired(record.url)) {
-            toast.info("畫面刷新中，請稍候。", {
-                autoClose: 2000
-            });
-            dispatch(resetHistoryState());
-            await dispatch(fetchAudioHistory());
-        }
-    };
+    const refreshAudioUrl = async () => {
+        toast.info("畫面刷新中，請稍候...", { autoClose: 3000 });
+        dispatch(resetHistoryState());
+        await dispatch(fetchAudioHistory());
+    }
 
     return (
         <div className="audio-record-item">
@@ -126,10 +122,8 @@ export default function AudioRecordItem({ record, onDelete }) {
 
             </div>
 
-            <audio controls onPlay={handlePlayAudio}>
-                <source
-                    src={record.url}
-                    type="audio/mpeg" />
+            <audio controls onPlay={checkUrlExpired(record.url) ? refreshAudioUrl : null}>
+                <source src={record.url} onError={refreshAudioUrl} type="audio/mpeg" />
                 您的瀏覽器不支援音頻元素。
             </audio>
 

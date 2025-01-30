@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
-const expireTime = 3 * 60 * 60; // 3 小時（秒）
+const expireTime = 2 * 60; // 3 小時（秒）
 
 /**
  * 生成 S3 預簽名 URL
