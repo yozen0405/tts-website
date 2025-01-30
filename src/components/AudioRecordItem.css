@@ -4,6 +4,7 @@
   flex-direction: column;
   padding: 1rem;
   margin-bottom: 1rem;
+  gap: 2em;
   background: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -39,4 +40,56 @@
   cursor: pointer;
   display: flex;
   justify-content: center;
+}
+
+.rhap_container {
+  background-color: transparent;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0);
+  padding: 0 2vw;
+}
+.rhap_main-controls-button {
+  color: #34874c;
+}
+
+.rhap_download-progress {
+  background-color: #accdb5;
+}
+
+.rhap_progress-filled {
+  background-color: #367f49;
+}
+
+.rhap_progress-indicator {
+  background-color: #34874c;
+}
+
+.rhap_play-pause-button {
+  width: 50px;
+  height: 50px;
+  font-size: 50px;
+}
+
+.rhap_progress-section {
+  display: grid;
+  grid-template-rows: auto auto; 
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;                    
+}
+
+.rhap_progress-container {
+  grid-column: span 2;
+  grid-row: 1;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.rhap_progress-section > .rhap_time {
+  grid-row: 2;
+  width: 100%;
+  color: rgb(16, 125, 41);
+}
+
+.rhap_total-time {
+  text-align: end;
 }

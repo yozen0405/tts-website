@@ -61,6 +61,7 @@ export default function MainApp() {
                             hideProgressBar={true}
                             pauseOnHover={true}
                             autoClose={8000}
+                            closeOnClick={true}
                             theme='colored'
                             className='custom-toast'
                         />

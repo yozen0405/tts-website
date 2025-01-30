@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { downloadAudio } from '../api/apiActions';
 import download from 'downloadjs';
+import ReactH5AudioPlayer from 'react-h5-audio-player'; 
+import 'react-h5-audio-player/lib/styles.css';
 import './AudioRecordItem.css';
 import ConfirmationModal from './ConfirmationModal';
 import { RotatingLines } from 'react-loader-spinner';
@@ -137,10 +139,20 @@ export default function AudioRecordItem({ record, onDelete }) {
 
             </div>
 
-            <audio controls onPlay={checkUrlExpired(record.url) ? refreshAudioUrl : null}>
-                <source src={record.url} onError={refreshAudioUrl} type="audio/mpeg" />
-                您的瀏覽器不支援音頻元素。
-            </audio>
+            <ReactH5AudioPlayer
+                src={record.url}
+                autoPlay={false}
+                showJumpControls={false}
+                showDownloadProgress={true}
+                customAdditionalControls={[]}  
+                customVolumeControls={[]} 
+                onCanPlay={() => {
+                    if (checkUrlExpired(record.url)) {
+                        refreshAudioUrl();
+                    }
+                }}
+                onError={refreshAudioUrl}
+            />
 
             <ConfirmationModal
                 isVisible={showConfirmModal}

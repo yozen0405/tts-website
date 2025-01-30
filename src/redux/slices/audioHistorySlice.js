@@ -13,9 +13,8 @@ const audioHistorySlice = createSlice({
     name: 'audioHistory',
     initialState,
     reducers: {
-        init(state) {
-            state.isLoading = true;
-            state.error = null;
+        setIsLoading(state, action) {
+            state.isLoading = action.payload;
         },
         setAudioRecords(state, action) {
             state.isLoading = false;
@@ -40,7 +39,7 @@ const audioHistorySlice = createSlice({
     },
 });
 
-export const { init, setAudioRecords, setError, setIsDeleting, resetHistoryState, deleteRecord } = audioHistorySlice.actions;
+export const { setIsLoading, setAudioRecords, setError, setIsDeleting, resetHistoryState, deleteRecord } = audioHistorySlice.actions;
 
 export const fetchAudioHistory = () => async (dispatch, getState) => {
     const { hasFetched } = getState().audioHistory;
@@ -49,10 +48,11 @@ export const fetchAudioHistory = () => async (dispatch, getState) => {
         return;
     }
 
-    dispatch(init());
+    dispatch(setIsLoading(true));
     try {
         const records = await getAudioHistory();
         dispatch(setAudioRecords(records));
+        dispatch(setIsLoading(false));
     } catch (error) {
         dispatch(setError(error.message));
     }
