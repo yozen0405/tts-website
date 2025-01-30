@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { downloadAudio } from '../api/apiActions';
@@ -88,6 +88,21 @@ export default function AudioRecordItem({ record, onDelete }) {
         dispatch(resetHistoryState());
         await dispatch(fetchAudioHistory());
     }
+
+    useEffect(() => {
+        const handleFocus = () => {
+            const expired = checkUrlExpired(record.url);
+            if (expired) {
+                refreshAudioUrl();
+            }
+        };
+    
+        window.addEventListener('focus', handleFocus);
+    
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, [record.url]);
 
     return (
         <div className="audio-record-item">
