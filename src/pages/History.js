@@ -13,11 +13,11 @@ import { toast } from 'react-toastify';
 
 export default function History() {
     const dispatch = useDispatch();
-    const { audioRecords, isLoading, expandedRecord } = useSelector((state) => state.audioHistory);
+    const { audioRecords, isLoading, expandedRecord, hasFetched } = useSelector((state) => state.audioHistory);
 
     useEffect(() => {
         dispatch(fetchAudioHistory());
-    }, [dispatch]);
+    }, [dispatch, hasFetched]);
 
     const handleDelete = async (createdAt) => {
         await dispatch(deleteAudioRecord(createdAt));

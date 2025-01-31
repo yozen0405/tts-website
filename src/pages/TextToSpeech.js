@@ -30,10 +30,6 @@ import { toast } from 'react-toastify';
 export default function TextToSpeech() {
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		dispatch(fetchUserData());
-	  }, [dispatch]);
-	
 	const {
 		languages,
 		voices,
@@ -46,8 +42,13 @@ export default function TextToSpeech() {
 		isGenerating,
 		error,
 		isLoading,
-		charLimit
+		charLimit,
+		loaded
 	} = useSelector((state) => state.voices);
+
+	useEffect(() => {
+		dispatch(fetchUserData());
+	  }, [dispatch, loaded]);
 
 	const formatToAzureValue = (value) => {
 		const formatted = value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`;
@@ -113,10 +114,11 @@ export default function TextToSpeech() {
 		dispatch(resetHistoryState());
 	};
 
-	const refreshAudioUrl = () => {
+	const refreshAudioUrl = async () => {
+		if (!record) return;
 		toast.info("畫面閒置太久，重制頁面中...", { autoClose: 3000 })
 		dispatch(resetVoiceState());
-		dispatch(fetchUserData());
+		await dispatch(fetchUserData());
 	}
 
 	if (isLoading) {

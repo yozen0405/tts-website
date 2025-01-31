@@ -6,11 +6,11 @@ import "./UserProfile.css";
 
 export default function UserProfile() {
     const dispatch = useDispatch();
-    const { userData, isLoading } = useSelector((state) => state.profile);
+    const { userData, isLoading, loaded } = useSelector((state) => state.profile);
 
     useEffect(() => {
         dispatch(fetchUserData());
-    }, [dispatch]);
+    }, [dispatch, loaded]);
 
     return (
         <div className="user-profile-container">
