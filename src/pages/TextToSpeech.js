@@ -47,8 +47,21 @@ export default function TextToSpeech() {
 	} = useSelector((state) => state.voices);
 
 	useEffect(() => {
+		const handleFocus = () => {
+			if (!loaded) {
+				toast.info("畫面閒置太久，重制頁面中...", { autoClose: 3000 });
+			}
+			
+			dispatch(fetchUserData());
+		};
+		
 		dispatch(fetchUserData());
-	  }, [dispatch, loaded]);
+		window.addEventListener('focus', handleFocus);
+	
+		return () => {
+			window.removeEventListener('focus', handleFocus);
+		};
+	}, [dispatch]);
 
 	const formatToAzureValue = (value) => {
 		const formatted = value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`;
@@ -116,7 +129,7 @@ export default function TextToSpeech() {
 
 	const refreshAudioUrl = async () => {
 		if (!record) return;
-		toast.info("畫面閒置太久，重制頁面中...", { autoClose: 3000 })
+		toast.info("畫面閒置太久，重制頁面中...", { autoClose: 3000 });
 		dispatch(resetVoiceState());
 		await dispatch(fetchUserData());
 	}
