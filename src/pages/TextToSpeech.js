@@ -48,10 +48,6 @@ export default function TextToSpeech() {
 
 	useEffect(() => {
 		const handleFocus = () => {
-			if (!loaded) {
-				toast.info("畫面閒置太久，重制頁面中...", { autoClose: 3000 });
-			}
-			
 			dispatch(fetchUserData());
 		};
 		
